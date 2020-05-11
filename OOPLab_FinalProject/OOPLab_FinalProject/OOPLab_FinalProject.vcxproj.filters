@@ -18,6 +18,9 @@
     <ClCompile Include="OOPLab_FinalProject.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="Map.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Gloomhaven.h">

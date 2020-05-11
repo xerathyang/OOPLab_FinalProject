@@ -147,6 +147,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Map.cpp" />
     <ClCompile Include="OOPLab_FinalProject.cpp" />
   </ItemGroup>
   <ItemGroup>
