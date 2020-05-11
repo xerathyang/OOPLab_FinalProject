@@ -149,6 +149,12 @@
   <ItemGroup>
     <ClCompile Include="OOPLab_FinalProject.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Character.h" />
+    <ClInclude Include="Gloomhaven.h" />
+    <ClInclude Include="Map.h" />
+    <ClInclude Include="Monster.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
