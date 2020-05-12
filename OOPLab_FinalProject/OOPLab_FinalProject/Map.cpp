@@ -4,10 +4,12 @@ MapData::MapData() {
 	_map.clear();
 	_mapx = 0;
 	_mapy = 0;
+	_monstercount = 0;
 }
 
 void MapData::SetMap(string MapPath) {
 	ifstream fs;
+	int _x, _y, cache;
 	string input;
 	vector<int> tmp;
 	fs.open(MapPath);
@@ -20,6 +22,25 @@ void MapData::SetMap(string MapPath) {
 		}
 		_map.push_back(tmp);
 	}
+	for (int i = 0; i < 4; i++) {
+		fs >> _x >> _y;
+		Point2d playercur(_x, _y);
+		_start.push_back(playercur);
+	}
+	fs >> cache;
+	_monstercount = cache;
+	for (int i = 0; i < _monstercount; i++) {
+		fs >> _x >> _y;
+		Point2d monstercur(_x, _y);
+		_monster.push_back(monstercur);
+		fs >> cache;
+		_monsterc2.push_back(cache);
+		fs >> cache;
+		_monsterc3.push_back(cache);
+		fs >> cache;
+		_monsterc4.push_back(cache);
+	}
+	fs.close();
 }
 
 Point2d::Point2d() {

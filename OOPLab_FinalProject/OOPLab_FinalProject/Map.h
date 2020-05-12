@@ -12,7 +12,9 @@ public:
 	void SetMap(string);
 private:
 	vector<vector<int>> _map;
-	vector<int> _startx, _starty, _monsterx, _monstery;
+	vector<Point2d> _start, _monster;
+	vector<int> _monsterc2, _monsterc3, _monsterc4;
+	vector<string> _monstername;
 
 	int _mapx, _mapy, _monstercount;
 };
