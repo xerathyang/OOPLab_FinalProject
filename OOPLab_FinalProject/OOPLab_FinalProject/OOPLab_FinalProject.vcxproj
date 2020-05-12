@@ -148,9 +148,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Map.cpp" />
+    <ClCompile Include="Monster.cpp" />
     <ClCompile Include="OOPLab_FinalProject.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Action.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="Gloomhaven.h" />
     <ClInclude Include="Map.h" />

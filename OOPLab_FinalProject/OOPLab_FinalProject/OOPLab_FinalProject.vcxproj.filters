@@ -21,6 +21,9 @@
     <ClCompile Include="Map.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="Monster.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Gloomhaven.h">
@@ -33,6 +36,9 @@
       <Filter>來源檔案</Filter>
     </ClInclude>
     <ClInclude Include="Map.h">
+      <Filter>來源檔案</Filter>
+    </ClInclude>
+    <ClInclude Include="Action.h">
       <Filter>來源檔案</Filter>
     </ClInclude>
   </ItemGroup>
