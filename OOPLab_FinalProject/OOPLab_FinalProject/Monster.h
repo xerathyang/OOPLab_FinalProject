@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <sstream>
 #include "Action.h"
 
 using namespace std;
@@ -10,8 +11,8 @@ using namespace std;
 class Monster {
 public:
 	Monster();
-	Monster(string name, int nlife, int natk, int nrange, int elife, int eatk, int erange);
-	void SetMonster();
+	Monster(ifstream&);
+
 private:
 	string _name;
 	int _nlife, _natk, _nrange, _elife, _eatk, _erange;
@@ -21,7 +22,7 @@ private:
 class MonsterData {
 public:
 	MonsterData();
-	void SetMonsterData();
+	MonsterData(string);
 private:
 	int _monsterTypecount;
 	vector<Monster> _monsterlist;
@@ -30,7 +31,7 @@ private:
 class MonsterSkill {
 public:
 	MonsterSkill();
-	void SetMonsterSkill();
+	MonsterSkill(ifstream&);
 private:
 	int _index, _dex;
 	vector<Action> _action;
