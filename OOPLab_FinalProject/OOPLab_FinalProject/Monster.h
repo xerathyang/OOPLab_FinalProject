@@ -31,7 +31,7 @@ private:
 class MonsterSkill {
 public:
 	MonsterSkill();
-	MonsterSkill(ifstream&);
+	MonsterSkill(ifstream&,int);
 private:
 	int _index, _dex;
 	vector<Action> _action;

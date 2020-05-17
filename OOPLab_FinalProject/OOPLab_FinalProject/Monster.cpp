@@ -22,7 +22,7 @@ Monster::Monster(ifstream& fs) {
 		if (comp != _name) {
 			cout << "monsterskill error" << endl;
 		}
-		cache = new MonsterSkill(fs);
+		cache = new MonsterSkill(fs, _nrange);
 		_monstercard.push_back(cache);
 	}
 }
@@ -50,14 +50,71 @@ MonsterSkill::MonsterSkill() {
 	_action.clear();
 	_shuffle = false;
 }
-//in progress
-MonsterSkill::MonsterSkill(ifstream& fs) {
+
+MonsterSkill::MonsterSkill(ifstream& fs, int range) {
 	stringstream ss;
+	string cache;
 	string skillline;
+	Action tmp;
+	int movpos[2];
+	int param1, param2;
 
 	ss.str("");
 	ss.clear();
 	getline(fs, skillline);
 	ss << skillline;
 	ss >> _index >> _dex;
+	while (ss >> cache) {
+		if (cache == "d") {
+			_shuffle = false;
+			break;
+		}
+		else if (cache == "r") {
+			_shuffle = true;
+			break;
+		}
+		else if (cache == "move") {
+			ss >> cache;
+			for (int j = 0; j < 2; j++) {
+				switch (cache[j])
+				{
+				case 'w':
+					movpos[j] = 0;
+					break;
+				case 'a':
+					movpos[j] = 1;
+					break;
+				case 's':
+					movpos[j] = 2;
+					break;
+				case 'd':
+					movpos[j] = 3;
+					break;
+				default:
+					break;
+				}
+			}
+			tmp = new Action(0, movpos[0], movpos[1]);
+		}
+		else if (cache == "attack") {
+			ss >> param1;
+			if (range > 0) {
+				ss >> cache;
+				ss >> param2;
+				tmp = new Action(1, param1, param2);
+			}
+			else {
+				tmp = new Action(1, param1, 0);
+			}
+		}
+		else if (cache == "heal") {
+			ss >> param1;
+			tmp = new Action(2, param1, 0);
+		}
+		else if (cache == "shield") {
+			ss >> param1;
+			tmp = new Action(3, param1, 0);
+		}
+		_action.push_back(tmp);
+	}
 }
