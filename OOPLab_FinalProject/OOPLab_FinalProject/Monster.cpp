@@ -15,7 +15,7 @@ Monster::Monster() {
 //in progress
 Monster::Monster(ifstream& fs) {
 	string comp;
-	MonsterSkill cache;
+	MonsterSkill *cache;
 	fs >> _name >> _nlife >> _natk >> _nrange >> _elife >> _eatk >> _erange;
 	for (int i = 0; i < 6; i++) {
 		fs >> comp;
@@ -23,7 +23,7 @@ Monster::Monster(ifstream& fs) {
 			cout << "monsterskill error" << endl;
 		}
 		cache = new MonsterSkill(fs, _nrange);
-		_monstercard.push_back(cache);
+		_monstercard.push_back(*cache);
 	}
 }
 
@@ -34,12 +34,12 @@ MonsterData::MonsterData() {
 
 MonsterData::MonsterData(string MonsterPath) {
 	ifstream fs;
-	Monster cache;
+	Monster *cache;
 	fs.open(MonsterPath);
 	fs >> _monsterTypecount;
 	for (int i = 0; i < _monsterTypecount; i++) {
 		cache = new Monster(fs);
-		_monsterlist.push_back(cache);
+		_monsterlist.push_back(*cache);
 	}
 	fs.close();
 }
@@ -55,9 +55,14 @@ MonsterSkill::MonsterSkill(ifstream& fs, int range) {
 	stringstream ss;
 	string cache;
 	string skillline;
-	Action tmp;
+	Action* tmp = new Action();
 	int movpos[2];
 	int param1, param2;
+	
+	_shuffle = false;
+
+	movpos[0] = 0;
+	movpos[1] = 0;
 
 	ss.str("");
 	ss.clear();
@@ -115,6 +120,6 @@ MonsterSkill::MonsterSkill(ifstream& fs, int range) {
 			ss >> param1;
 			tmp = new Action(3, param1, 0);
 		}
-		_action.push_back(tmp);
+		_action.push_back(*tmp);
 	}
 }

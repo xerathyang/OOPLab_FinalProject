@@ -8,6 +8,16 @@
 
 using namespace std;
 
+class MonsterSkill {
+public:
+	MonsterSkill();
+	MonsterSkill(ifstream&,int);
+private:
+	int _index, _dex;
+	vector<Action> _action;
+	bool _shuffle;
+};
+
 class Monster {
 public:
 	Monster();
@@ -28,12 +38,3 @@ private:
 	vector<Monster> _monsterlist;
 };
 
-class MonsterSkill {
-public:
-	MonsterSkill();
-	MonsterSkill(ifstream&,int);
-private:
-	int _index, _dex;
-	vector<Action> _action;
-	bool _shuffle;
-};

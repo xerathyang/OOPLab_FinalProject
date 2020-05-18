@@ -6,19 +6,6 @@
 
 using namespace std;
 
-class MapData {
-public:
-	MapData();
-	void SetMap(string);
-private:
-	vector<vector<int>> _map;
-	vector<Point2d> _start, _monster;
-	vector<int> _monsterc2, _monsterc3, _monsterc4;
-	vector<string> _monstername;
-
-	int _mapx, _mapy, _monstercount;
-};
-
 class Point2d {
 public:
 	Point2d();
@@ -39,3 +26,17 @@ private:
 	int _x;
 	int _y;
 };
+
+class MapData {
+public:
+	MapData();
+	void SetMap(string);
+private:
+	vector<vector<int>> _map;
+	vector<Point2d> _start, _monster;
+	vector<int> _monsterc2, _monsterc3, _monsterc4;
+	vector<string> _monstername;
+
+	int _mapx, _mapy, _monstercount;
+};
+
