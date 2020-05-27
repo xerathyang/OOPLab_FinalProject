@@ -34,7 +34,7 @@ MonsterData::MonsterData() {
 
 MonsterData::MonsterData(string MonsterPath) {
 	ifstream fs;
-	Monster *cache;
+	Monster* cache;
 	fs.open(MonsterPath);
 	fs >> _monsterTypecount;
 	for (int i = 0; i < _monsterTypecount; i++) {

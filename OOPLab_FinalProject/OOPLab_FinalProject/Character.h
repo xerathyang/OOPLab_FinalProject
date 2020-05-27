@@ -14,7 +14,7 @@ public:
 	CharacterSkill(ifstream&);
 private:
 	int _index, _dex;
-	vector<Action> _action;
+	vector<vector<Action>> _action;
 };
 
 class Character {
@@ -23,7 +23,8 @@ public:
 	Character(ifstream&);
 private:
 	string _name;
-	int _life, _startcard;
+	int _life, _startcard, _availablecard;
+	vector<CharacterSkill> _charactercard;
 };
 
 class CharacterData {
