@@ -15,6 +15,7 @@ CharacterSkill::CharacterSkill(ifstream& fs) {
 	stringstream ss;
 	ss.str("");
 	ss.clear();
+	fs.ignore();
 	getline(fs, input);
 	ss << input;
 	//get index and dexterity
@@ -23,6 +24,7 @@ CharacterSkill::CharacterSkill(ifstream& fs) {
 	//get up and down part
 	for (int j = 0; j < 2; j++) {
 		ss >> cache;
+		//infinite loop
 		while (cache != "-") {
 			if (cache == "move") {
 				//var1: move distance

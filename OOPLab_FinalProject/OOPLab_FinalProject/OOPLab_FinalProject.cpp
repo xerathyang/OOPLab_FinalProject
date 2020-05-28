@@ -2,10 +2,23 @@
 //
 
 #include <iostream>
+#include <string>
+#include "Monster.h"
+#include "Character.h"
+#include "Map.h"
+
+using namespace std;
 
 int main(int argc, char *argv[])
 {
-    std::cout << "Hello World!\n";
+    string input;
+    cin >> input;
+    if (input == "play") {
+        CharacterData cd1(argv[1]);
+        
+        MonsterData md1(argv[2]);
+        cout << "1" << endl;
+    }
 }
 
 // 執行程式: Ctrl + F5 或 [偵錯] > [啟動但不偵錯] 功能表

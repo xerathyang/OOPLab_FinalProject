@@ -31,6 +31,7 @@ class MapData {
 public:
 	MapData();
 	void SetMap(string);
+	void printMap(MapData);
 private:
 	vector<vector<int>> _map;
 	vector<Point2d> _start, _monster;

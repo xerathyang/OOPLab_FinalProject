@@ -66,6 +66,7 @@ MonsterSkill::MonsterSkill(ifstream& fs, int range) {
 
 	ss.str("");
 	ss.clear();
+	fs.ignore();
 	getline(fs, skillline);
 	ss << skillline;
 	ss >> _index >> _dex;
