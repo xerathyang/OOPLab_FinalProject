@@ -14,14 +14,15 @@ Monster::Monster() {
 
 //in progress
 Monster::Monster(ifstream& fs) {
-	string comp;
+	string count, comp;
+	stringstream ss;
+	ss.str("");
+	ss.clear();
 	MonsterSkill *cache;
-	fs >> _name >> _nlife >> _natk >> _nrange >> _elife >> _eatk >> _erange;
+	getline(fs, count);
+	ss << count;
+	ss >> _name >> _nlife >> _natk >> _nrange >> _elife >> _eatk >> _erange;
 	for (int i = 0; i < 6; i++) {
-		fs >> comp;
-		if (comp != _name) {
-			cout << "monsterskill error" << endl;
-		}
 		cache = new MonsterSkill(fs, _nrange);
 		_monstercard.push_back(*cache);
 	}
@@ -34,9 +35,15 @@ MonsterData::MonsterData() {
 
 MonsterData::MonsterData(string MonsterPath) {
 	ifstream fs;
+	string count;
+	stringstream ss;
+	ss.str("");
+	ss.clear();
 	Monster* cache;
 	fs.open(MonsterPath);
-	fs >> _monsterTypecount;
+	getline(fs, count);
+	ss << count;
+	ss >> _monsterTypecount;
 	for (int i = 0; i < _monsterTypecount; i++) {
 		cache = new Monster(fs);
 		_monsterlist.push_back(*cache);
@@ -53,24 +60,23 @@ MonsterSkill::MonsterSkill() {
 
 MonsterSkill::MonsterSkill(ifstream& fs, int range) {
 	stringstream ss;
-	string cache;
-	string skillline;
+	string cache, skillline, name;
 	Action* tmp = new Action();
 	int movpos[2];
 	int param1, param2;
 	
-	_shuffle = false;
-
-	movpos[0] = 0;
-	movpos[1] = 0;
-
 	ss.str("");
 	ss.clear();
-	fs.ignore();
+
+	_shuffle = false;
+
 	getline(fs, skillline);
 	ss << skillline;
-	ss >> _index >> _dex;
+	ss >> name >> _index >> _dex;
 	while (ss >> cache) {
+		movpos[0] = 0;
+		movpos[1] = 0;
+
 		if (cache == "d") {
 			_shuffle = false;
 			break;
