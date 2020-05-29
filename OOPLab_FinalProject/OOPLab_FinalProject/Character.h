@@ -11,7 +11,7 @@ using namespace std;
 class CharacterSkill {
 public:
 	CharacterSkill();
-	CharacterSkill(ifstream&);
+	CharacterSkill(ifstream&, int index);
 private:
 	int _index, _dex;
 	vector<vector<Action>> _action;

@@ -8,14 +8,14 @@ CharacterSkill::CharacterSkill() {
 	_action.clear();
 }
 
-CharacterSkill::CharacterSkill(ifstream& fs) {
-	string input, cache;
-	vector<Action> tmp;
+CharacterSkill::CharacterSkill(ifstream& fs, int index) {
+	string input, cache, b;
+	vector<Action>* tmp=new vector<Action>;
 	int var1, var2;
 	stringstream ss;
 	ss.str("");
 	ss.clear();
-	fs.ignore();
+
 	getline(fs, input);
 	ss << input;
 	//get index and dexterity
@@ -23,13 +23,15 @@ CharacterSkill::CharacterSkill(ifstream& fs) {
 	
 	//get up and down part
 	for (int j = 0; j < 2; j++) {
-		ss >> cache;
+
 		//infinite loop
-		while (cache != "-") {
+		while (cache != "-" && ss>>cache) {
+			if (cache == "-")
+				break;
 			if (cache == "move") {
 				//var1: move distance
 				ss >> var1;
-				tmp.push_back(Action(0, var1, 0));
+				(*tmp).push_back(Action(0, var1, 0));
 			}
 			else if (cache == "attack") {
 				//var1: attack damage
@@ -38,26 +40,27 @@ CharacterSkill::CharacterSkill(ifstream& fs) {
 				if (cache == "range") {
 					//var2: attack range
 					ss >> var2;
-					tmp.push_back(Action(1, var1, var2));
+					(*tmp).push_back(Action(1, var1, var2));
 				}
 				else {
-					tmp.push_back(Action(1, var1, 0));
+					(*tmp).push_back(Action(1, var1, 0));
 					continue;
 				}
 			}
 			else if (cache == "heal") {
 				//var1: heal value
 				ss >> var1;
-				tmp.push_back(Action(2, var1, 0));
+				(*tmp).push_back(Action(2, var1, 0));
 			}
 			else if (cache == "shield") {
 				//var1: shield value
 				ss >> var1;
-				tmp.push_back(Action(3, var1, 0));
+				(*tmp).push_back(Action(3, var1, 0));
 			}
-			ss >> cache;
 		}
-		_action.push_back(tmp);
+		_action.push_back(*tmp);
+		tmp = new vector<Action>;
+		cache = "";
 	}
 
 }
@@ -70,11 +73,21 @@ Character::Character() {
 }
 
 Character::Character(ifstream& fs) {
-	string comp;
 	CharacterSkill* cache;
-	fs >> _name >> _life >> _startcard >> _availablecard;
+	stringstream ss;
+	string count;
+	ss.str("");
+	ss.clear();
+	getline(fs, count);
+	ss << count;
+	ss >> _name >> _life >> _startcard;
+	ss.str("");
+	ss.clear();
+	getline(fs, count);
+	ss << count;
+	ss >> _availablecard;
 	for (int i = 0; i < _availablecard; i++) {
-		cache = new CharacterSkill(fs);
+		cache = new CharacterSkill(fs, i);
 		_charactercard.push_back(*cache);
 	}
 }
@@ -86,10 +99,17 @@ CharacterData::CharacterData() {
 CharacterData::CharacterData(string CharacterPath) {
 	ifstream fs;
 	Character* cache;
+	stringstream ss;
+	string count;
+	ss.str("");
+	ss.clear();
 	fs.open(CharacterPath);
-	fs >> _charTypecount;
+	getline(fs, count);
+	ss << count;
+	ss >> _charTypecount;
 	for (int i = 0; i < _charTypecount; i++) {
 		cache = new Character(fs);
 		_charlist.push_back(*cache);
 	}
+	fs.close();
 }
