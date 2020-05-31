@@ -1,13 +1,17 @@
-#include <Monster.h>
-#include <Character.h>
-#include <Map.h>
+#pragma once
+#include "Character.h"
+#include "Monster.h"
+#include "Map.h"
+#include "Action.h"
+#include <string>
+#include <vector>
 
-using namespace std;
-
-class Obj {
+class Object {
 public:
-	Obj();
-	Obj();
-
+	Object();
+	void operator=(Character);
+	void operator=(Monster);
 private:
+	bool _ismonster;
+	int _life;
 };

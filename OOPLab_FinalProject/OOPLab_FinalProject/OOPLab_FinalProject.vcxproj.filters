@@ -47,5 +47,8 @@
     <ClInclude Include="Action.h">
       <Filter>來源檔案</Filter>
     </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>來源檔案</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
