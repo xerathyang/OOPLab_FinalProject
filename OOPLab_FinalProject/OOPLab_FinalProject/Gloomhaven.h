@@ -1,6 +1,6 @@
 #pragma once
 
-#include <fstream>
+#include <iostream>
 #include <string>
 #include <vector>
 #include "Monster.h"
@@ -17,7 +17,11 @@ public:
 	void setCharacterNum(int num);
 	int getCharacterNum() { return characterNum; };
 	void init();
+
 private:
 	string characterFile, monsterFile;
+	CharacterData* cd1;
+	MonsterData* md1;
+	MapData* map1;
 	int characterNum;
 };

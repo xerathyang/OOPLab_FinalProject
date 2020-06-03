@@ -20,4 +20,5 @@ Object& Object::operator=(Monster& tar) {
 	Object* ret = new Object();
 	ret->_ismonster = true;
 	
+	
 }
