@@ -21,6 +21,8 @@ class Character {
 public:
 	Character();
 	Character(ifstream&);
+
+	friend class Object;
 private:
 	string _name;
 	int _life, _startcard, _availablecard;

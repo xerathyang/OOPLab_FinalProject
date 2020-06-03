@@ -30,6 +30,9 @@
     <ClCompile Include="Character.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Gloomhaven.h">

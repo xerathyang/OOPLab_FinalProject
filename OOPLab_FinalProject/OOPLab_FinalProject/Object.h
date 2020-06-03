@@ -9,9 +9,11 @@
 class Object {
 public:
 	Object();
-	void operator=(Character);
-	void operator=(Monster);
+	Object& operator=(Character);
+	Object& operator=(Monster);
 private:
 	bool _ismonster;
-	int _life;
+	string name;
+	int _life, _atk, _def;
+	vector<int> _cardindex;
 };

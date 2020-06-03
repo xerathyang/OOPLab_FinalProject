@@ -22,7 +22,7 @@ class Monster {
 public:
 	Monster();
 	Monster(ifstream&);
-
+	friend class Object;
 private:
 	string _name;
 	int _nlife, _natk, _nrange, _elife, _eatk, _erange;
