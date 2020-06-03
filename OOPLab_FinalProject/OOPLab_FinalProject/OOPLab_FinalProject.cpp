@@ -3,22 +3,22 @@
 
 #include <iostream>
 #include <string>
-#include "Monster.h"
-#include "Character.h"
-#include "Map.h"
+#include "Gloomhaven.h"
 
 using namespace std;
 
 int main(int argc, char *argv[])
 {
-    string input;
-    cin >> input;
-    if (input == "play") {
-        CharacterData cd1(argv[1]);
-        
-        MonsterData md1(argv[2]);
-        cout << "1" << endl;
-    }
+    Gloomhaven driver;
+    driver.setFilePath(argv[1], argv[2]);
+    //string input;
+    //cin >> input;
+    //if (input == "play") {
+    //    CharacterData cd1(argv[1]);
+    //    
+    //    MonsterData md1(argv[2]);
+    //    cout << "1" << endl;
+    //}
 }
 
 // 執行程式: Ctrl + F5 或 [偵錯] > [啟動但不偵錯] 功能表
