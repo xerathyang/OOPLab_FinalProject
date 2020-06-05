@@ -30,7 +30,8 @@ void MapData::SetMap(string MapPath) {
 	fs >> cache;
 	_monstercount = cache;
 	for (int i = 0; i < _monstercount; i++) {
-		fs >> _x >> _y;
+		fs >> input >> _x >> _y;
+		_monstername.push_back(input);
 		Point2d monstercur(_x, _y);
 		_monster.push_back(monstercur);
 		fs >> cache;
@@ -41,6 +42,16 @@ void MapData::SetMap(string MapPath) {
 		_monsterc4.push_back(cache);
 	}
 	fs.close();
+}
+
+void MapData::printMap() {
+	system("CLS");
+	for (int i = 0; i < _mapy; i++) {
+		for (int j = 0; j < _mapx; j++) {
+			cout << _map[i][j];
+		}
+		cout << endl;
+	}
 }
 
 Point2d::Point2d() {

@@ -86,5 +86,19 @@ void Gloomhaven::init() {
 	ss.clear();
 	getline(cin, mapname);
 	map1->SetMap(mapname);
+	printMap();
 }
 
+
+void Gloomhaven::printMap() {
+	system("CLS");
+	vector<vector<int>> tmp = map1->getMap();
+	int x = map1->x();
+	int y = map1->y();
+	for (int i = 0; i < y; i++) {
+		for (int j = 0; j < x; j++) {
+			cout << tmp[i][j];
+		}
+		cout << endl;
+	}
+}
