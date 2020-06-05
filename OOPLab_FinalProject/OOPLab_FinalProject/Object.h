@@ -12,6 +12,7 @@ public:
 	Object();
 	bool spawn(Character&);
 	bool spawn(Monster&,bool);
+	Point2d& getpos();
 
 	friend class Gloomhaven;
 private:

@@ -11,14 +11,14 @@ void MapData::SetMap(string MapPath) {
 	ifstream fs;
 	int _x, _y, cache;
 	string input;
-	vector<int> tmp;
+	vector<char> tmp;
 	fs.open(MapPath);
 	fs >> _mapy >> _mapx;
 	for (int i = 0; i < _mapy; i++) {
 		fs >> input;
 		tmp.clear();
 		for (int j = 0; j < _mapx; j++) {
-			tmp.push_back(input[j] - '0');
+			tmp.push_back(input[j]);
 		}
 		_map.push_back(tmp);
 	}
@@ -54,6 +54,10 @@ void MapData::printMap() {
 	}
 }
 
+void MapData::SetSymbol(Point2d& tar, char text) {
+	_map[tar.y()][tar.x()] = text;
+}
+
 Point2d::Point2d() {
 	_x = 0;
 	_y = 0;
@@ -64,14 +68,14 @@ Point2d::Point2d(int inputx, int inputy) {
 	_y = inputy;
 }
 
-Point2d Point2d::operator+(const Point2d& tar) {
-	Point2d tmp(_x + tar._x, _y + tar._y);
-	return tmp;
+Point2d& Point2d::operator+(const Point2d& tar) {
+	Point2d* tmp = new Point2d(_x + tar._x, _y + tar._y);
+	return *tmp;
 }
 
-Point2d Point2d::operator-(const Point2d& tar) {
-	Point2d tmp(_x - tar._x, _y - tar._y);
-	return tmp;
+Point2d& Point2d::operator-(const Point2d& tar) {
+	Point2d* tmp = new Point2d(_x - tar._x, _y - tar._y);
+	return *tmp;
 }
 
 bool Point2d::operator==(const Point2d& tar) {
@@ -80,5 +84,14 @@ bool Point2d::operator==(const Point2d& tar) {
 	}
 	else {
 		return false;
+	}
+}
+
+bool Point2d::operator!=(const Point2d& tar) {
+	if (_x == tar._x && _y == tar._y) {
+		return false;
+	}
+	else {
+		return true;
 	}
 }

@@ -63,6 +63,7 @@ void Gloomhaven::init() {
 		}
 
 		for (int j = 0; j < tmp->_startcardnum; j++) {
+			//card no exist
 			if (cardcache[j] >= tmp->_avaliablecard) {
 				i--;
 				cout << "This character doesn't have \"" << cardcache[j] << "\"." << endl;
@@ -71,6 +72,7 @@ void Gloomhaven::init() {
 			auto search = tmp->_cardindex.find(cardcache[j]);
 			if (search == tmp->_cardindex.end())
 				tmp->_cardindex.insert(cardcache[j]);
+			//duplicate card
 			else {
 				i--;
 				cout << "You cannot bring duplicate cards, please choose again." << endl;
@@ -86,18 +88,84 @@ void Gloomhaven::init() {
 	ss.clear();
 	getline(cin, mapname);
 	map1->SetMap(mapname);
-	printMap();
+
+	//print the map with start point
+	Point2d startcache = map1->_start[0];
+	printMap(1, startcache);
+
+	//get user input to modify start point
+	while (getline(cin, cache)) {
+		if (cache == "e")
+			break;
+
+		Point2d tostart = startcache;
+		//set temp position
+		for (unsigned i = 0; i < cache.size(); i++) {
+			if (cache[i] == 'w')
+				tostart = tostart - Point2d(0, 1);
+			else if(cache[i]=='a')
+				tostart = tostart - Point2d(1, 0);
+			else if (cache[i] == 's')
+				tostart = tostart + Point2d(0, 1);
+			else if (cache[i] == 'd')
+				tostart = tostart + Point2d(1, 0);
+		}
+		//if position is fit, move start point
+		for (unsigned i = 0; i < map1->_start.size(); i++) {
+			if (tostart == map1->_start[i] && startcache != map1->_start[i]) {
+				startcache = map1->_start[i];
+				break;
+			}
+		}
+
+		//print the modified map
+		printMap(1, startcache);
+	}
+	
 }
 
-
-void Gloomhaven::printMap() {
+void Gloomhaven::printMap(int mode) {
 	system("CLS");
-	vector<vector<int>> tmp = map1->getMap();
-	int x = map1->x();
-	int y = map1->y();
+	MapData cachemap(*map1);
+
+
+
+	vector<vector<char>> tmp = cachemap.getMap();
+	int x = cachemap.x();
+	int y = cachemap.y();
+
 	for (int i = 0; i < y; i++) {
 		for (int j = 0; j < x; j++) {
-			cout << tmp[i][j];
+			if (tmp[i][j] != '0')
+				cout << tmp[i][j];
+			else
+				cout << " ";
+		}
+		cout << endl;
+	}
+}
+
+//for select start point
+void Gloomhaven::printMap(int mode, Point2d& para1) {
+	system("CLS");
+	MapData cachemap = *map1;
+	if (mode == 1) {
+		for (unsigned int i = 0; i < cachemap._start.size(); i++) {
+			cachemap.SetSymbol(cachemap._start[i], '_');
+		}
+		cachemap.SetSymbol(para1, '*');
+	}
+
+	vector<vector<char>> tmp = cachemap.getMap();
+	int x = cachemap.x();
+	int y = cachemap.y();
+
+	for (int i = 0; i < y; i++) {
+		for (int j = 0; j < x; j++) {
+			if (tmp[i][j] != '0')
+				cout << tmp[i][j];
+			else
+				cout << " ";
 		}
 		cout << endl;
 	}

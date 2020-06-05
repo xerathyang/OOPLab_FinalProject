@@ -42,3 +42,7 @@ bool Object::spawn(Monster& tar,bool iselite) {
 	_cardindex = set<int>{ 0,1,2,3,4,5 };
 	return false;
 }
+
+Point2d& Object::getpos() {
+	return _pos;
+}

@@ -18,7 +18,8 @@ public:
 	void setFilePath(string cFile,string mFile);
 	int getCharacterNum() { return characterNum; };
 	void init();
-	void printMap();
+	void printMap(int);
+	void printMap(int, Point2d&);
 	int characterNum;
 
 private:

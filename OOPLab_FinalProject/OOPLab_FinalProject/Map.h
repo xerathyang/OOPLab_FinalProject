@@ -11,16 +11,17 @@ public:
 	Point2d();
 	Point2d(int, int);
 
-	int x() { return _x; }
-	int y() { return _y; }
+	int x() { return _x; };
+	int y() { return _y; };
 
-	Point2d operator+(const Point2d&);
-	Point2d operator-(const Point2d&);
+	Point2d& operator+(const Point2d&);
+	Point2d& operator-(const Point2d&);
 	//Point2d& operator++();
 	//Point2d operator++(int);
 	//Point2d& operator--();
 	//Point2d operator--(int);
 	bool operator==(const Point2d&);
+	bool operator!=(const Point2d&);
 
 private:
 	int _x;
@@ -34,9 +35,12 @@ public:
 	void printMap();
 	int x() { return _mapx; };
 	int y() { return _mapy; };
-	vector<vector<int>> getMap() { return _map; };
+	void SetSymbol(Point2d&, char);
+	vector<vector<char>> getMap() { return _map; };
+
+	friend class Gloomhaven;
 private:
-	vector<vector<int>> _map;
+	vector<vector<char>> _map;
 	vector<Point2d> _start, _monster;
 	vector<int> _monsterc2, _monsterc3, _monsterc4;
 	vector<string> _monstername;
