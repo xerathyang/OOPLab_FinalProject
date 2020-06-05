@@ -130,3 +130,13 @@ MonsterSkill::MonsterSkill(ifstream& fs, int range) {
 		_action.push_back(*tmp);
 	}
 }
+
+Monster& MonsterData::find(string name) {
+	Monster* ret = new Monster();
+	for (int i = 0; i < _monsterTypecount; i++) {
+		if (_monsterlist[i]._name == name) {
+			ret = &_monsterlist[i];
+		}
+	}
+	return *ret;
+}

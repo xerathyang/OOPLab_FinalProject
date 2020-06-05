@@ -23,6 +23,7 @@ public:
 	Character(ifstream&);
 
 	friend class Object;
+	friend class CharacterData;
 private:
 	string _name;
 	int _life, _startcard, _availablecard;
@@ -33,6 +34,7 @@ class CharacterData {
 public:
 	CharacterData();
 	CharacterData(string);
+	Character& find(string);
 private:
 	int _charTypecount;
 	vector<Character> _charlist;

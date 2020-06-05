@@ -3,17 +3,20 @@
 #include "Monster.h"
 #include "Map.h"
 #include "Action.h"
+#include "Gloomhaven.h"
 #include <string>
-#include <vector>
+#include <set>
 
 class Object {
 public:
 	Object();
-	Object& operator=(Character&);
-	Object& operator=(Monster&);
+	bool spawn(Character&);
+	bool spawn(Monster&,bool);
+
+	friend class Gloomhaven;
 private:
 	bool _ismonster;
 	string _name;
-	int _life, _atk, _def;
-	vector<int> _cardindex;
+	int _life, _atk, _def, _range, _startcardnum;
+	set<int> _cardindex;
 };

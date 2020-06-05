@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <sstream>
 #include "Monster.h"
 #include "Character.h"
 #include "Map.h"
@@ -17,11 +18,12 @@ public:
 	void setCharacterNum(int num);
 	int getCharacterNum() { return characterNum; };
 	void init();
+	int characterNum;
 
 private:
 	string characterFile, monsterFile;
 	CharacterData* cd1;
 	MonsterData* md1;
 	MapData* map1;
-	int characterNum;
+	vector<Object> objectlist;
 };

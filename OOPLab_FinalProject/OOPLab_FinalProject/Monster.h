@@ -23,6 +23,7 @@ public:
 	Monster();
 	Monster(ifstream&);
 	friend class Object;
+	friend class MonsterData;
 private:
 	string _name;
 	int _nlife, _natk, _nrange, _elife, _eatk, _erange;
@@ -33,6 +34,7 @@ class MonsterData {
 public:
 	MonsterData();
 	MonsterData(string);
+	Monster& find(string);
 private:
 	int _monsterTypecount;
 	vector<Monster> _monsterlist;

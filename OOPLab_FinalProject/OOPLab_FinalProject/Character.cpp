@@ -113,3 +113,13 @@ CharacterData::CharacterData(string CharacterPath) {
 	}
 	fs.close();
 }
+
+Character& CharacterData::find(string name) {
+	Character* ret = new Character();
+	for (int i = 0; i < _charTypecount; i++) {
+		if (_charlist[i]._name == name) {
+			ret = &_charlist[i];
+		}
+	}
+	return *ret;
+}
