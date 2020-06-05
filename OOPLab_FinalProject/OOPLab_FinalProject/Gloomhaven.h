@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <set>
 #include <sstream>
 #include "Monster.h"
 #include "Character.h"
@@ -15,7 +16,6 @@ class Gloomhaven {
 public:
 	Gloomhaven();
 	void setFilePath(string cFile,string mFile);
-	void setCharacterNum(int num);
 	int getCharacterNum() { return characterNum; };
 	void init();
 	int characterNum;
@@ -25,5 +25,7 @@ private:
 	CharacterData* cd1;
 	MonsterData* md1;
 	MapData* map1;
-	vector<Object> objectlist;
+	vector<Object> charlist;
+	vector<Object> monsterlist;
+	set<string> monstertype;
 };

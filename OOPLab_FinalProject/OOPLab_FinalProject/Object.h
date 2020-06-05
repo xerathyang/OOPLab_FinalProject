@@ -17,6 +17,7 @@ public:
 private:
 	bool _ismonster;
 	string _name;
-	int _life, _atk, _def, _range, _startcardnum;
+	int _life, _atk, _def, _range, _startcardnum, _avaliablecard;
+	Point2d _pos;
 	set<int> _cardindex;
 };

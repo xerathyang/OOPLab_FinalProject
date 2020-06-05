@@ -9,12 +9,14 @@ Object::Object() {
 	_def = 0;
 	_range = 0;
 	_startcardnum = 0;
+	_avaliablecard = 0;
 }
 
 bool Object::spawn(Character& tar) {
 	if (tar._name == "")
 		return true;
 	_startcardnum = tar._startcard;
+	_avaliablecard = tar._availablecard;
 	_name = tar._name;
 	_life = tar._life;
 	
