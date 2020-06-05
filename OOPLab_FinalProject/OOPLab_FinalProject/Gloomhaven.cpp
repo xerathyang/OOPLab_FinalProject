@@ -94,32 +94,48 @@ void Gloomhaven::init() {
 	printMap(1, startcache);
 
 	//get user input to modify start point
-	while (getline(cin, cache)) {
-		if (cache == "e")
-			break;
+	for (unsigned c = 0; c < charlist.size(); c++) {
 
-		Point2d tostart = startcache;
-		//set temp position
-		for (unsigned i = 0; i < cache.size(); i++) {
-			if (cache[i] == 'w')
-				tostart = tostart - Point2d(0, 1);
-			else if(cache[i]=='a')
-				tostart = tostart - Point2d(1, 0);
-			else if (cache[i] == 's')
-				tostart = tostart + Point2d(0, 1);
-			else if (cache[i] == 'd')
-				tostart = tostart + Point2d(1, 0);
-		}
-		//if position is fit, move start point
-		for (unsigned i = 0; i < map1->_start.size(); i++) {
-			if (tostart == map1->_start[i] && startcache != map1->_start[i]) {
-				startcache = map1->_start[i];
-				break;
+		//in progress
+		unsigned startpush = 0;
+		startcache = map1->_start[0];
+		for (unsigned t = 0; t < c; t++) {
+			while (startcache == charlist[t]._pos) {
+				startcache = map1->_start[startpush];
 			}
 		}
 
-		//print the modified map
-		printMap(1, startcache);
+
+		while (getline(cin, cache)) {
+			if (cache == "e") {
+				charlist[c]._pos = startcache;
+				break;
+			}
+
+			Point2d tostart = startcache;
+			//set temp position
+			for (unsigned i = 0; i < cache.size(); i++) {
+				if (cache[i] == 'w')
+					tostart = tostart - Point2d(0, 1);
+				else if(cache[i]=='a')
+					tostart = tostart - Point2d(1, 0);
+				else if (cache[i] == 's')
+					tostart = tostart + Point2d(0, 1);
+				else if (cache[i] == 'd')
+					tostart = tostart + Point2d(1, 0);
+			}
+			//if position is fit, move start point
+			for (unsigned i = 0; i < map1->_start.size(); i++) {
+				if (tostart == map1->_start[i] && startcache != map1->_start[i]) {
+					startcache = map1->_start[i];
+					break;
+				}
+			}
+
+			//print the modified map
+			printMap(1, startcache);
+		}
+
 	}
 	
 }
