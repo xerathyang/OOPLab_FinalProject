@@ -58,6 +58,35 @@ void MapData::SetSymbol(Point2d& tar, char text) {
 	_map[tar.y()][tar.x()] = text;
 }
 
+vector<vector<char>> MapData::generateVisiblefilter() {
+	vector<vector<char>> tmp = _map;
+	generatedriver(tmp, _start[0].x(), _start[0].y());
+	return tmp;
+}
+
+void MapData::generatedriver(vector<vector<char>> &tar,int x,int y) {
+	if (tar[y][x] == '1')
+		tar[y][x] = '+';
+	else
+		return;
+	//system("CLS");
+	//for (int i = 0; i < tar.size(); i++) {
+	//	for (int j = 0; j < tar[0].size(); j++) {
+	//		cout << tar[i][j];
+	//	}
+	//	cout << endl;
+	//}
+
+	if (x > 0)
+		generatedriver(tar, x - 1, y);
+	if (y > 0)
+		generatedriver(tar, x, y - 1);
+	if (x < tar[0].size())
+		generatedriver(tar, x + 1, y);
+	if (y < tar.size())
+		generatedriver(tar, x, y + 1);
+}
+
 Point2d::Point2d() {
 	_x = 0;
 	_y = 0;

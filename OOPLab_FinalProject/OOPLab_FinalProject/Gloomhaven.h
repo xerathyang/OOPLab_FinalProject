@@ -31,5 +31,6 @@ private:
 	MapData* map1;
 	vector<Object> charlist;
 	vector<Object> monsterlist;
+	vector<vector<char>> visiblearea;
 	set<string> monstertype;
 };

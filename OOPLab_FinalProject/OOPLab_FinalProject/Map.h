@@ -37,6 +37,8 @@ public:
 	int y() { return _mapy; };
 	void SetSymbol(Point2d&, char);
 	vector<vector<char>> getMap() { return _map; };
+	vector<vector<char>> generateVisiblefilter();
+	void generatedriver(vector<vector<char>>&, int, int);
 
 	friend class Gloomhaven;
 private:

@@ -50,36 +50,36 @@ void Gloomhaven::init() {
 		}
 
 		//cards are less
-		if (cardcache.size() < (unsigned)tmp->_startcardnum) {
-			cout << "You must bring " << tmp->_startcardnum << " cards for this character." << endl;
-			i--;
-			continue;
-		}
-		//cards are more
-		else if (cardcache.size() > (unsigned)tmp->_startcardnum) {
-			cout << "You can only bring " << tmp->_startcardnum << " card for this character." << endl;
-			i--;
-			continue;
-		}
+if (cardcache.size() < (unsigned)tmp->_startcardnum) {
+	cout << "You must bring " << tmp->_startcardnum << " cards for this character." << endl;
+	i--;
+	continue;
+}
+//cards are more
+else if (cardcache.size() > (unsigned)tmp->_startcardnum) {
+	cout << "You can only bring " << tmp->_startcardnum << " card for this character." << endl;
+	i--;
+	continue;
+}
 
-		for (int j = 0; j < tmp->_startcardnum; j++) {
-			//card no exist
-			if (cardcache[j] >= tmp->_avaliablecard) {
-				i--;
-				cout << "This character doesn't have \"" << cardcache[j] << "\"." << endl;
-				break;
-			}
-			auto search = tmp->_cardindex.find(cardcache[j]);
-			if (search == tmp->_cardindex.end())
-				tmp->_cardindex.insert(cardcache[j]);
-			//duplicate card
-			else {
-				i--;
-				cout << "You cannot bring duplicate cards, please choose again." << endl;
-				break;
-			}
-		}
-		charlist.push_back(*tmp);
+for (int j = 0; j < tmp->_startcardnum; j++) {
+	//card no exist
+	if (cardcache[j] >= tmp->_avaliablecard) {
+		i--;
+		cout << "This character doesn't have \"" << cardcache[j] << "\"." << endl;
+		break;
+	}
+	auto search = tmp->_cardindex.find(cardcache[j]);
+	if (search == tmp->_cardindex.end())
+		tmp->_cardindex.insert(cardcache[j]);
+	//duplicate card
+	else {
+		i--;
+		cout << "You cannot bring duplicate cards, please choose again." << endl;
+		break;
+	}
+}
+charlist.push_back(*tmp);
 	}
 
 	cout << endl;
@@ -88,6 +88,8 @@ void Gloomhaven::init() {
 	ss.clear();
 	getline(cin, mapname);
 	map1->SetMap(mapname);
+
+	visiblearea = map1->generateVisiblefilter();
 
 	//print the map with start point
 	Point2d startcache = map1->_start[0];
@@ -124,7 +126,7 @@ void Gloomhaven::init() {
 			for (unsigned i = 0; i < cache.size(); i++) {
 				if (cache[i] == 'w')
 					tostart = tostart - Point2d(0, 1);
-				else if(cache[i]=='a')
+				else if (cache[i] == 'a')
 					tostart = tostart - Point2d(1, 0);
 				else if (cache[i] == 's')
 					tostart = tostart + Point2d(0, 1);
@@ -192,7 +194,9 @@ void Gloomhaven::printMap(int mode, Point2d& para1) {
 
 	for (int i = 0; i < y; i++) {
 		for (int j = 0; j < x; j++) {
-			if (tmp[i][j] != '0')
+			if (tmp[i][j] != '0' && visiblearea[i][j] == '+')
+				cout << tmp[i][j];
+			else if (tmp[i][j] == '3')
 				cout << tmp[i][j];
 			else
 				cout << " ";
