@@ -50,36 +50,37 @@ void Gloomhaven::init() {
 		}
 
 		//cards are less
-if (cardcache.size() < (unsigned)tmp->_startcardnum) {
-	cout << "You must bring " << tmp->_startcardnum << " cards for this character." << endl;
-	i--;
-	continue;
-}
-//cards are more
-else if (cardcache.size() > (unsigned)tmp->_startcardnum) {
-	cout << "You can only bring " << tmp->_startcardnum << " card for this character." << endl;
-	i--;
-	continue;
-}
+		if (cardcache.size() < (unsigned)tmp->_startcardnum) {
+			cout << "You must bring " << tmp->_startcardnum << " cards for this character." << endl;
+			i--;
+			continue;
+		}
+		//cards are more
+		else if (cardcache.size() > (unsigned)tmp->_startcardnum) {
+			cout << "You can only bring " << tmp->_startcardnum << " card for this character." << endl;
+			i--;
+			continue;
+		}
 
-for (int j = 0; j < tmp->_startcardnum; j++) {
-	//card no exist
-	if (cardcache[j] >= tmp->_avaliablecard) {
-		i--;
-		cout << "This character doesn't have \"" << cardcache[j] << "\"." << endl;
-		break;
-	}
-	auto search = tmp->_cardindex.find(cardcache[j]);
-	if (search == tmp->_cardindex.end())
-		tmp->_cardindex.insert(cardcache[j]);
-	//duplicate card
-	else {
-		i--;
-		cout << "You cannot bring duplicate cards, please choose again." << endl;
-		break;
-	}
-}
-charlist.push_back(*tmp);
+		for (int j = 0; j < tmp->_startcardnum; j++) {
+			//card no exist
+			if (cardcache[j] >= tmp->_avaliablecard) {
+				i--;
+				cout << "This character doesn't have \"" << cardcache[j] << "\"." << endl;
+				break;
+			}
+			auto search = tmp->_cardindex.find(cardcache[j]);
+			if (search == tmp->_cardindex.end())
+				tmp->_cardindex.insert(cardcache[j]);
+			//duplicate card
+			else {
+				i--;
+				cout << "You cannot bring duplicate cards, please choose again." << endl;
+				break;
+			}
+		}
+		tmp->_mapid = 'A' + i;
+		charlist.push_back(*tmp);
 	}
 
 	cout << endl;
@@ -91,6 +92,35 @@ charlist.push_back(*tmp);
 
 	visiblearea = map1->generateVisiblefilter();
 
+	vector<int>::iterator iter;
+	if (characterNum == 2) {
+		iter = map1->_monsterc2.begin();
+	}
+	else if (characterNum == 3) {
+		iter = map1->_monsterc3.begin();
+	}
+	else if (characterNum == 4) {
+		iter = map1->_monsterc4.begin();
+	}
+
+	//spawn monster by map info
+	for (int i = 0; i < map1->_monstercount; i++) {
+		Object* tmp;
+		if (iter[i] == 0)
+			continue;
+		else {
+			tmp = new Object();
+			tmp->spawn(md1->find(map1->_monstername[i]), iter[i] - 1);
+			tmp->_pos = map1->_monsterstart[i];
+		}
+		if (visiblearea[tmp->_pos.y()][tmp->_pos.x()] == '+')
+			tmp->_isactive = true;
+		tmp->_mapid = 'a' + i;
+
+		monsterlist.push_back(*tmp);
+	}
+
+
 	//print the map with start point
 	Point2d startcache = map1->_start[0];
 	printMap(1, startcache);
@@ -98,7 +128,6 @@ charlist.push_back(*tmp);
 	//get user input to modify start point
 	for (unsigned c = 0; c < charlist.size(); c++) {
 
-		//in progress
 		unsigned startpush = 1;
 		startcache = map1->_start[0];
 		for (unsigned t = 0; t < c; t++) {
@@ -149,6 +178,7 @@ charlist.push_back(*tmp);
 		}
 
 	}
+
 	
 }
 
@@ -185,8 +215,14 @@ void Gloomhaven::printMap(int mode, Point2d& para1) {
 	}
 	for (unsigned c = 0; c < charlist.size(); c++) {
 		if (charlist[c]._isactive)
-			cachemap.SetSymbol(charlist[c]._pos, 'a' + c);
+			cachemap.SetSymbol(charlist[c]._pos, charlist[c]._mapid);
 	}
+
+	for (unsigned c = 0; c < monsterlist.size(); c++) {
+		if (monsterlist[c]._isactive)
+			cachemap.SetSymbol(monsterlist[c]._pos, monsterlist[c]._mapid);
+	}
+
 
 	vector<vector<char>> tmp = cachemap.getMap();
 	int x = cachemap.x();

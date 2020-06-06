@@ -11,6 +11,7 @@ Object::Object() {
 	_range = 0;
 	_startcardnum = 0;
 	_avaliablecard = 0;
+	_mapid = ' ';
 }
 
 bool Object::spawn(Character& tar) {

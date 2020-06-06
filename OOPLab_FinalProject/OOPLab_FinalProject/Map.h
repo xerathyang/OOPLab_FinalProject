@@ -43,7 +43,7 @@ public:
 	friend class Gloomhaven;
 private:
 	vector<vector<char>> _map;
-	vector<Point2d> _start, _monster;
+	vector<Point2d> _start, _monsterstart;
 	vector<int> _monsterc2, _monsterc3, _monsterc4;
 	vector<string> _monstername;
 

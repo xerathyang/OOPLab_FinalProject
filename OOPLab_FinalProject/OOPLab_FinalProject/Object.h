@@ -19,6 +19,7 @@ private:
 	bool _ismonster,_isactive;
 	string _name;
 	int _life, _atk, _def, _range, _startcardnum, _avaliablecard;
+	char _mapid;
 	Point2d _pos;
 	set<int> _cardindex;
 	
