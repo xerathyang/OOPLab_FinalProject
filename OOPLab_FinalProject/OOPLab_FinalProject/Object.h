@@ -16,11 +16,12 @@ public:
 
 	friend class Gloomhaven;
 private:
-	bool _ismonster,_isactive;
+	bool _ismonster, _isactive, _hasmoved;
 	string _name;
-	int _life, _atk, _def, _range, _startcardnum, _avaliablecard;
+	int _life, _atk, _def, _dex, _range, _startcardnum, _avaliablecard;
+	int _card1, _card2;
 	char _mapid;
 	Point2d _pos;
-	set<int> _cardindex;
+	set<int> _cardindex, _discardindex;
 	
 };

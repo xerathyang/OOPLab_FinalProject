@@ -4,6 +4,7 @@ Gloomhaven::Gloomhaven() {
 	characterFile = "";
 	monsterFile = "";
 	characterNum = 0;
+	DEBUG_MODE = 0;
 }
 
 void Gloomhaven::setFilePath(string cFile, string mFile) {
@@ -22,6 +23,16 @@ void Gloomhaven::init() {
 	charlist.clear();
 	monsterlist.clear();
 	monstertype.clear();
+
+	srand((unsigned)time(NULL));
+
+	//FOR DEBUG MODE
+
+	//cout << "Use Debug Mode?";
+	//getline(cin, cache);
+	//if (cache == "1") {
+	//	DEBUG_MODE = 1;
+	//}
 
 	cout << "Enter Character Number: ";
 	getline(cin, cache);
@@ -112,6 +123,7 @@ void Gloomhaven::init() {
 			tmp = new Object();
 			tmp->spawn(md1->find(map1->_monstername[i]), iter[i] - 1);
 			tmp->_pos = map1->_monsterstart[i];
+			monstertype.insert(tmp->_name);
 		}
 		if (visiblearea[tmp->_pos.y()][tmp->_pos.x()] == '+')
 			tmp->_isactive = true;
@@ -182,10 +194,163 @@ void Gloomhaven::init() {
 	
 }
 
+void Gloomhaven::preparephrase() {
+	Object* tar;
+	char charname;
+	bool flag = false;
+	int cache1, cache2;
+	string input;
+	stringstream ss;
+	set<int>::iterator ster;
+
+	printMap(0);
+	//character prepare
+	while (getline(cin, input)) {
+		ss.str("");
+		ss.clear();
+		ss << input;
+		ss >> charname;
+		if (charname < 'A' || charname>'D' || charname - 'A' >= characterNum) {
+			cout << "No character's ID is fit." << endl;
+			continue;
+		}
+		tar = &charlist[charname - 'A'];
+		if (tar->_hasmoved) {
+			cout << "This character has moved." << endl;
+			continue;
+		}
+		ss >> input;
+
+		if (input == "check") {
+			if (tar->_cardindex.size() < 2) {
+				cout << "This character only can take long break." << endl;
+				continue;
+			}
+			cout << "hand: ";
+			ster = tar->_cardindex.begin();
+			if (ster != tar->_cardindex.end()) {
+				cout << *ster;
+				ster++;
+			}
+			while (ster!=tar->_cardindex.end()) {
+				cout << ", " << *ster;
+				ster++;
+			}
+			cout << " ; discard: ";
+			ster = tar->_discardindex.begin();
+			if (ster != tar->_discardindex.end()) {
+				cout << *ster;
+				ster++;
+			}
+			while (ster != tar->_discardindex.end()) {
+				cout << ", " << *ster;
+				ster++;
+			}
+			cout << endl;
+		}
+		//long break
+		else if (input=="-1") {
+			tar->_hasmoved = true;
+			tar->_dex = 99;
+			tar->_card1 = -1;
+			tar->_card2 = -1;
+		}
+		//choose 2 card
+		else if (ss>>cache2) {
+			ss.str("");
+			ss.clear();
+			ss << input;
+			ss >> cache1;
+			if (cardcheck(*tar, cache1, cache2)) {
+				tar->_card1 = cache1;
+				tar->_card2 = cache2;
+				tar->_hasmoved = true;
+			}
+			else {
+				cout << "This character doesn't have these cards now." << endl;
+				continue;
+			}
+			
+		}
+		else {
+			cout << "Unknow Command." << endl;
+			continue;
+		}
+
+		//if all character have moved
+		for (unsigned i = 0; i < charlist.size(); i++) {
+			if (charlist[i]._hasmoved)
+				flag = true;
+			else {
+				flag = false;
+				break;
+			}
+		}
+		if (flag)
+			break;
+	}
+	cout << "!" << endl;
+
+	//monster prepare
+	cache1 = 0;
+	cache2 = -1;
+	set<string>::iterator miter = monstertype.begin();
+	vector<Object>::iterator iter;
+	while (miter != monstertype.end()) {
+		iter = monsterlist.begin();
+		while (iter != monsterlist.end()) {
+			if (iter->_name == *miter && iter->_isactive) {
+				break;
+			}
+			iter++;
+		}
+		if (iter == monsterlist.end()) {
+			miter++;
+			continue;
+		}
+
+		if (DEBUG_MODE == 1) {
+			//ascend choose card
+		}
+		else {
+			flag = false;
+			while (!flag) {
+				cache1 = rand() % 6;
+				auto searchmcard = iter->_cardindex.find(cache1);
+				if (searchmcard != iter->_cardindex.end()) {
+					iter->_card1 = cache1;
+					iter->_cardindex.erase(cache1);
+					flag = true;
+				}
+			}
+		}
+		iter++;
+		while (iter != monsterlist.end()) {
+			if (iter->_name == *miter) {
+				iter->_card1 = cache1;
+				iter->_cardindex.erase(cache1);
+			}
+			iter++;
+		}
+		miter++;
+	}
+	cout << "!" << endl;
+}
+
+//for normal print
 void Gloomhaven::printMap(int mode) {
 	system("CLS");
-	MapData cachemap(*map1);
+	MapData cachemap = *map1;
 
+	for (unsigned c = 0; c < charlist.size(); c++) {
+		if (charlist[c]._isactive)
+			cachemap.SetSymbol(charlist[c]._pos, charlist[c]._mapid);
+	}
+
+	for (unsigned c = 0; c < monsterlist.size(); c++) {
+		if (monsterlist[c]._isactive)
+			cachemap.SetSymbol(monsterlist[c]._pos, monsterlist[c]._mapid);
+	}
 
 
 	vector<vector<char>> tmp = cachemap.getMap();
@@ -194,7 +359,9 @@ void Gloomhaven::printMap(int mode) {
 
 	for (int i = 0; i < y; i++) {
 		for (int j = 0; j < x; j++) {
-			if (tmp[i][j] != '0')
+			if (tmp[i][j] != '0' && visiblearea[i][j] == '+')
+				cout << tmp[i][j];
+			else if (tmp[i][j] == '3')
 				cout << tmp[i][j];
 			else
 				cout << " ";
@@ -239,6 +406,8 @@ void Gloomhaven::printMap(int mode, Point2d& para1) {
 		}
 		cout << endl;
 	}
+
+	cout << "Enter the combination of \"WASD\" to move *, enter \"e\" to confirm the position." << endl;
 }
 
 //for check if the position is occupied by other object 
@@ -252,4 +421,13 @@ bool Gloomhaven::isoccupied(Point2d& tar) {
 			return true;
 	}
 	return false;
+}
+
+bool Gloomhaven::cardcheck(Object& tar, int card1, int card2) {
+	auto search1 = tar._cardindex.find(card1);
+	auto search2 = tar._cardindex.find(card2);
+	if (search1 == tar._cardindex.end() || search2 == tar._cardindex.end())
+		return false;
+	else
+		return true;
 }

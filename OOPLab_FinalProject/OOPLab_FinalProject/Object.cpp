@@ -4,14 +4,19 @@
 Object::Object() {
 	_ismonster = false;
 	_isactive = false;
+	_hasmoved = false;
 	_name = "";
 	_life = 0;
 	_atk = 0;
 	_def = 0;
+	_dex = 0;
 	_range = 0;
 	_startcardnum = 0;
 	_avaliablecard = 0;
 	_mapid = ' ';
+
+	_card1 = -1;
+	_card2 = -1;
 }
 
 bool Object::spawn(Character& tar) {

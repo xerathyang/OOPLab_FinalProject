@@ -5,6 +5,7 @@
 #include <vector>
 #include <set>
 #include <sstream>
+#include <time.h>
 #include "Monster.h"
 #include "Character.h"
 #include "Map.h"
@@ -18,13 +19,16 @@ public:
 	void setFilePath(string cFile,string mFile);
 	int getCharacterNum() { return characterNum; };
 	void init();
+	void preparephrase();
 	void printMap(int);
 	void printMap(int, Point2d&);
 	bool isoccupied(Point2d&);
+	bool cardcheck(Object&, int, int);
 
 	int characterNum;
 
 private:
+	int DEBUG_MODE;
 	string characterFile, monsterFile;
 	CharacterData* cd1;
 	MonsterData* md1;

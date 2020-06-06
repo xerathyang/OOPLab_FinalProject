@@ -39,6 +39,7 @@ public:
 	vector<vector<char>> getMap() { return _map; };
 	vector<vector<char>> generateVisiblefilter();
 	void generatedriver(vector<vector<char>>&, int, int);
+	int findbyid(string);
 
 	friend class Gloomhaven;
 private:
