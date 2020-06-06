@@ -20,6 +20,8 @@ public:
 	void init();
 	void printMap(int);
 	void printMap(int, Point2d&);
+	bool isoccupied(Point2d&);
+
 	int characterNum;
 
 private:

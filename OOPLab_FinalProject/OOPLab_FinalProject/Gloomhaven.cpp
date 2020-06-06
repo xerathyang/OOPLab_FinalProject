@@ -97,22 +97,29 @@ void Gloomhaven::init() {
 	for (unsigned c = 0; c < charlist.size(); c++) {
 
 		//in progress
-		unsigned startpush = 0;
+		unsigned startpush = 1;
 		startcache = map1->_start[0];
 		for (unsigned t = 0; t < c; t++) {
 			while (startcache == charlist[t]._pos) {
 				startcache = map1->_start[startpush];
+				startpush++;
 			}
 		}
 
+		//print initial map
+		printMap(1, startcache);
 
 		while (getline(cin, cache)) {
+			//point select confirm
 			if (cache == "e") {
 				charlist[c]._pos = startcache;
+				charlist[c]._isactive = true;
+				printMap(1, startcache);
 				break;
 			}
 
 			Point2d tostart = startcache;
+
 			//set temp position
 			for (unsigned i = 0; i < cache.size(); i++) {
 				if (cache[i] == 'w')
@@ -126,6 +133,9 @@ void Gloomhaven::init() {
 			}
 			//if position is fit, move start point
 			for (unsigned i = 0; i < map1->_start.size(); i++) {
+				if (isoccupied(tostart)) {
+					break;
+				}
 				if (tostart == map1->_start[i] && startcache != map1->_start[i]) {
 					startcache = map1->_start[i];
 					break;
@@ -171,6 +181,10 @@ void Gloomhaven::printMap(int mode, Point2d& para1) {
 		}
 		cachemap.SetSymbol(para1, '*');
 	}
+	for (unsigned c = 0; c < charlist.size(); c++) {
+		if (charlist[c]._isactive)
+			cachemap.SetSymbol(charlist[c]._pos, 'a' + c);
+	}
 
 	vector<vector<char>> tmp = cachemap.getMap();
 	int x = cachemap.x();
@@ -185,4 +199,17 @@ void Gloomhaven::printMap(int mode, Point2d& para1) {
 		}
 		cout << endl;
 	}
+}
+
+//for check if the position is occupied by other object 
+bool Gloomhaven::isoccupied(Point2d& tar) {
+	for (unsigned i = 0; i < charlist.size(); i++) {
+		if (charlist[i]._pos == tar)
+			return true;
+	}
+	for (unsigned i = 0; i < monsterlist.size(); i++) {
+		if (charlist[i]._pos == tar)
+			return true;
+	}
+	return false;
 }

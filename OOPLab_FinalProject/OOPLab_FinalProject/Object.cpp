@@ -3,6 +3,7 @@
 
 Object::Object() {
 	_ismonster = false;
+	_isactive = false;
 	_name = "";
 	_life = 0;
 	_atk = 0;
