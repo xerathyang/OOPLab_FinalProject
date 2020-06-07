@@ -319,6 +319,7 @@ void Gloomhaven::preparephrase() {
 				auto searchmcard = iter->_cardindex.find(cache1);
 				if (searchmcard != iter->_cardindex.end()) {
 					iter->_card1 = cache1;
+					iter->_dex = md1->find(iter->_name).getdex(cache1);
 					iter->_cardindex.erase(cache1);
 					flag = true;
 				}
@@ -337,7 +338,51 @@ void Gloomhaven::preparephrase() {
 }
 
 void Gloomhaven::actionphrase() {
+	//get sort by dex, actionline store the Object's copy, need find back to original Object
+	vector<Object> actionline;
+	vector<Object>::iterator aiter;
+	Object* tmp;
+	for (unsigned i = 0; i < charlist.size(); i++) {
+		aiter = actionline.begin();
+		tmp = new Object();
+		*tmp = charlist[i];
+		while (aiter != actionline.end()) {
+			if (tmp->_dex < aiter->_dex) {
+				actionline.insert(aiter, *tmp);
+				break;
+			}
+			else {
+				aiter++;
+			}	
+		}
+		if (aiter == actionline.end()) {
+			actionline.push_back(*tmp);
+		}
+	}
+	for (unsigned i = 0; i < monsterlist.size(); i++) {
+		aiter = actionline.begin();
+		tmp = new Object();
+		*tmp = monsterlist[i];
+		if (!tmp->_isactive)
+			continue;
+		while (aiter != actionline.end()) {
+			if (tmp->_dex < aiter->_dex) {
+				actionline.insert(aiter, *tmp);
+				break;
+			}
+			else {
+				aiter++;
+			}
+		}
+		if (aiter == actionline.end()) {
+			actionline.push_back(*tmp);
+		}
 
+	}
+
+
+
+	cout << "!" << endl;
 }
 
 //for normal print

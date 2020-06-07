@@ -28,6 +28,10 @@ Monster::Monster(ifstream& fs) {
 	}
 }
 
+int Monster::getdex(int index) {
+	return this->_monstercard[index]._dex;
+}
+
 MonsterData::MonsterData() {
 	_monsterlist.clear();
 	_monsterTypecount = 0;

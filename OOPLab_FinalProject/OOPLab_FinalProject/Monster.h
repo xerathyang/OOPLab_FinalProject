@@ -12,6 +12,8 @@ class MonsterSkill {
 public:
 	MonsterSkill();
 	MonsterSkill(ifstream&,int);
+
+	friend class Monster;
 private:
 	int _index, _dex;
 	vector<Action> _action;
@@ -22,6 +24,8 @@ class Monster {
 public:
 	Monster();
 	Monster(ifstream&);
+	int getdex(int);
+
 	friend class Object;
 	friend class MonsterData;
 private:
