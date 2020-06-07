@@ -12,6 +12,7 @@ int main(int argc, char *argv[])
     Gloomhaven driver;
     driver.setFilePath(argv[1], argv[2]);
     driver.init();
+    
     driver.preparephrase();
     //string input;
     //cin >> input;

@@ -92,6 +92,10 @@ Character::Character(ifstream& fs) {
 	}
 }
 
+int Character::getdex(int index) {
+	return this->_charactercard[index]._dex;
+}
+
 CharacterData::CharacterData() {
 	_charTypecount = 0;
 }

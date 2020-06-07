@@ -20,6 +20,7 @@ public:
 	int getCharacterNum() { return characterNum; };
 	void init();
 	void preparephrase();
+	void actionphrase();
 	void printMap(int);
 	void printMap(int, Point2d&);
 	bool isoccupied(Point2d&);

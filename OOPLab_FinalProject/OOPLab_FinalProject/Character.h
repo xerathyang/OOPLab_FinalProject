@@ -12,6 +12,8 @@ class CharacterSkill {
 public:
 	CharacterSkill();
 	CharacterSkill(ifstream&, int index);
+
+	friend class Character;
 private:
 	int _index, _dex;
 	vector<vector<Action>> _action;
@@ -21,6 +23,7 @@ class Character {
 public:
 	Character();
 	Character(ifstream&);
+	int getdex(int);
 
 	friend class Object;
 	friend class CharacterData;

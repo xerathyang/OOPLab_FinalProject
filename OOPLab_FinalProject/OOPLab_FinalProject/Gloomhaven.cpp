@@ -263,6 +263,7 @@ void Gloomhaven::preparephrase() {
 			ss >> cache1;
 			if (cardcheck(*tar, cache1, cache2)) {
 				tar->_card1 = cache1;
+				tar->_dex = cd1->find(tar->_name).getdex(cache1);
 				tar->_card2 = cache2;
 				tar->_hasmoved = true;
 			}
@@ -289,7 +290,6 @@ void Gloomhaven::preparephrase() {
 		if (flag)
 			break;
 	}
-	cout << "!" << endl;
 
 	//monster prepare
 	cache1 = 0;
@@ -334,7 +334,10 @@ void Gloomhaven::preparephrase() {
 		}
 		miter++;
 	}
-	cout << "!" << endl;
+}
+
+void Gloomhaven::actionphrase() {
+
 }
 
 //for normal print
@@ -407,7 +410,7 @@ void Gloomhaven::printMap(int mode, Point2d& para1) {
 		cout << endl;
 	}
 
-	cout << "Enter the combination of \"WASD\" to move *, enter \"e\" to confirm the position." << endl;
+	cout << "Enter the combination of \"wasd\" to move *, enter \"e\" to confirm the position." << endl;
 }
 
 //for check if the position is occupied by other object 
