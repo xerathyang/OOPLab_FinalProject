@@ -501,3 +501,122 @@ bool Gloomhaven::cardcheck(Object& tar, int card1, int card2) {
 	else
 		return true;
 }
+//Ken
+void Gloomhaven::CompareForMFA(pair<Object&, int> a, pair<Object&, int> b)
+{
+	if (a.second == b.second)
+	{
+		if (a.first._dex == b.first._dex)
+		{
+			return a.first._name < b.first._name;
+		}
+		else
+		{
+			return a.first._dex < b.first._dex;
+		}
+	}
+	return a.second < b.second;
+}
+
+void Gloomhaven::MonsterFindAndAttack(Object &mon)
+{
+
+	vector<CharWithRange> tempCharlist;
+	for (int MFA = 0; MFA < charlist.size(); MFA++)
+	{
+		int X = charlist[MFA]._pos.x() - mon._pos.x();
+		int Y = charlist[MFA]._pos.y() - mon._pos.y();
+		if (abs(X) + abs(Y) <= mon._range && FindBarrier(mon._pos, charlist[MFA]._pos))
+		{
+			pair<Object&, int> CharWithRange(charlist[MFA], abs(X) + abs(Y));
+			tempCharlist.push_back(CharWithRange);
+		}
+	}
+	if (tempCharlist.size() <= 0) { return; }
+	sort(tempCharlist.begin(), tempCharlist.end(), CompareForMFA);
+
+}
+
+bool Gloomhaven::FindBarrier(Point2d p1, Point2d p2)
+{
+	
+	vector<vector<int>> tempMap = map1->getMap();
+	if (p1.x() > p2.x())
+	{
+		Point2d temp;
+		temp = p1;
+		p1 = p2;
+		p2 = temp;
+		
+	}
+	if ((p1.x() == p2.x()))
+	{
+		for (int a = p1.y(); a <= p2.y(); a++)
+		{
+			if (tempMap[a][b] == 0 || tempMap[a][b] == 3) {
+				return true;
+			}
+			
+		}
+	}
+	else if ((p1.y() == p2.y()))
+	{
+		for (int a = p1.x(); a <= p2.x(); a++)
+		{
+			if (tempMap[a][b] == 0 || tempMap[a][b] == 3) {
+				return true;
+			}
+		}
+	}
+	else
+	{
+		float  m = (p1.y() - p2.y()) / (p1.x() - p2.x());
+		//y1<y2
+		if (p1.y() < p2.y())
+		{
+			for (int b = p1.y(); b <= p2.y(); b++)
+			{
+				for (int a = p1.x(); a <= p2.x(); a++)
+				{
+					for (float t = 0; t <= 1; t += 0.001)
+					{
+						float xx = p1.x() + (p2.x() - p1.x())*t;
+						float yy = p1.y() + (p2.y() - p1.y())*t;
+						if ((float)a - 0.5 <= xx && xx <= (float)a + 0.5 && (float)b - 0.5 <= yy && yy <= (float)b + 0.5)
+						{
+							if (tempMap[a][b] == 0 || tempMap[a][b] == 3) {
+								return true;
+							}
+						}
+					}
+				}
+				//cout << "s" << endl;
+			}
+
+		}
+		//y1>=y2
+		if (p1.y() >= p2.y())
+		{
+			for (int b = p1.y(); b >= p2.y(); b--)
+			{
+				for (int a = p1.x(); a <= p2.x(); a++)
+				{
+					for (float t = 0; t <= 1; t += 0.001)
+					{
+						float xx = p1.x() + (p2.x() - p1.x())*t;
+						float yy = p1.y() + (p2.y() - p1.y())*t;
+						if ((float)a - 0.5 <= xx && xx <= (float)a + 0.5 && (float)b - 0.5 <= yy && yy <= (float)b + 0.5)
+						{
+							if (tempMap[a][b] == 0 || tempMap[a][b] == 3) {
+								return true;
+							}
+						}
+					}
+				}
+				//cout << "s" << endl;
+			}
+
+		}
+	}
+	return false;
+}
