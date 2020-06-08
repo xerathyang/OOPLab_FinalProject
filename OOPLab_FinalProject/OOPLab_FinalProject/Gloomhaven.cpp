@@ -405,6 +405,20 @@ void Gloomhaven::actionphrase() {
 
 
 	cout << "!" << endl;
+
+
+	//action part
+	for (unsigned actioncount = 0; actioncount < actionline.size(); actioncount++) {
+		//monster
+		if (actionline[actioncount]._ismonster) {
+			MonsterFindAndAttack(actionline[actioncount]);
+		}
+		//character
+		else {
+
+		}
+	}
+
 }
 
 //for normal print
@@ -502,17 +516,17 @@ bool Gloomhaven::cardcheck(Object& tar, int card1, int card2) {
 		return true;
 }
 //Ken
-void Gloomhaven::CompareForMFA(pair<Object&, int> a, pair<Object&, int> b)
+bool CompareForMFA(const pair<Object&, int> &a, const pair<Object&, int> &b)
 {
 	if (a.second == b.second)
 	{
-		if (a.first._dex == b.first._dex)
+		if (a.first.getdex() == b.first.getdex())
 		{
-			return a.first._name < b.first._name;
+			return a.first.getname() < b.first.getname();
 		}
 		else
 		{
-			return a.first._dex < b.first._dex;
+			return a.first.getdex() < b.first.getdex();
 		}
 	}
 	return a.second < b.second;
@@ -521,26 +535,26 @@ void Gloomhaven::CompareForMFA(pair<Object&, int> a, pair<Object&, int> b)
 void Gloomhaven::MonsterFindAndAttack(Object &mon)
 {
 
-	vector<CharWithRange> tempCharlist;
+	vector<pair<Object&, int>> tempCharlist;
 	for (int MFA = 0; MFA < charlist.size(); MFA++)
 	{
 		int X = charlist[MFA]._pos.x() - mon._pos.x();
 		int Y = charlist[MFA]._pos.y() - mon._pos.y();
-		if (abs(X) + abs(Y) <= mon._range && FindBarrier(mon._pos, charlist[MFA]._pos))
+		if (abs(X) + abs(Y) <= mon._range && !FindBarrier(mon._pos, charlist[MFA]._pos))
 		{
 			pair<Object&, int> CharWithRange(charlist[MFA], abs(X) + abs(Y));
 			tempCharlist.push_back(CharWithRange);
 		}
 	}
-	if (tempCharlist.size() <= 0) { return; }
-	sort(tempCharlist.begin(), tempCharlist.end(), CompareForMFA);
-
+	if (tempCharlist.size() == 0) { return; }
+	//sort(tempCharlist.begin(), tempCharlist.end(), CompareForMFA);
+	cout << "!" << endl;
 }
 
 bool Gloomhaven::FindBarrier(Point2d p1, Point2d p2)
 {
 	
-	vector<vector<int>> tempMap = map1->getMap();
+	vector<vector<char>> tempMap = map1->getMap();
 	if (p1.x() > p2.x())
 	{
 		Point2d temp;
@@ -553,7 +567,7 @@ bool Gloomhaven::FindBarrier(Point2d p1, Point2d p2)
 	{
 		for (int a = p1.y(); a <= p2.y(); a++)
 		{
-			if (tempMap[a][b] == 0 || tempMap[a][b] == 3) {
+			if (tempMap[a][p1.x()] == 0 || tempMap[a][p1.x()] == 3) {
 				return true;
 			}
 			
@@ -563,14 +577,14 @@ bool Gloomhaven::FindBarrier(Point2d p1, Point2d p2)
 	{
 		for (int a = p1.x(); a <= p2.x(); a++)
 		{
-			if (tempMap[a][b] == 0 || tempMap[a][b] == 3) {
+			if (tempMap[p1.y()][a] == 0 || tempMap[p1.y()][a] == 3) {
 				return true;
 			}
 		}
 	}
 	else
 	{
-		float  m = (p1.y() - p2.y()) / (p1.x() - p2.x());
+		double  m = (p1.y() - p2.y()) / (p1.x() - p2.x());
 		//y1<y2
 		if (p1.y() < p2.y())
 		{
@@ -578,13 +592,13 @@ bool Gloomhaven::FindBarrier(Point2d p1, Point2d p2)
 			{
 				for (int a = p1.x(); a <= p2.x(); a++)
 				{
-					for (float t = 0; t <= 1; t += 0.001)
+					for (double t = 0; t <= 1; t += 0.001)
 					{
-						float xx = p1.x() + (p2.x() - p1.x())*t;
-						float yy = p1.y() + (p2.y() - p1.y())*t;
-						if ((float)a - 0.5 <= xx && xx <= (float)a + 0.5 && (float)b - 0.5 <= yy && yy <= (float)b + 0.5)
+						double xx = p1.x() + (p2.x() - p1.x())*t;
+						double yy = p1.y() + (p2.y() - p1.y())*t;
+						if ((double)a - 0.5 <= xx && xx <= (double)a + 0.5 && (double)b - 0.5 <= yy && yy <= (double)b + 0.5)
 						{
-							if (tempMap[a][b] == 0 || tempMap[a][b] == 3) {
+							if (tempMap[b][a] == 0 || tempMap[b][a] == 3) {
 								return true;
 							}
 						}
@@ -601,13 +615,13 @@ bool Gloomhaven::FindBarrier(Point2d p1, Point2d p2)
 			{
 				for (int a = p1.x(); a <= p2.x(); a++)
 				{
-					for (float t = 0; t <= 1; t += 0.001)
+					for (double t = 0; t <= 1; t += 0.001)
 					{
-						float xx = p1.x() + (p2.x() - p1.x())*t;
-						float yy = p1.y() + (p2.y() - p1.y())*t;
-						if ((float)a - 0.5 <= xx && xx <= (float)a + 0.5 && (float)b - 0.5 <= yy && yy <= (float)b + 0.5)
+						double xx = p1.x() + (p2.x() - p1.x())*t;
+						double yy = p1.y() + (p2.y() - p1.y())*t;
+						if ((double)a - 0.5 <= xx && xx <= (double)a + 0.5 && (double)b - 0.5 <= yy && yy <= (double)b + 0.5)
 						{
-							if (tempMap[a][b] == 0 || tempMap[a][b] == 3) {
+							if (tempMap[b][a] == 0 || tempMap[b][a] == 3) {
 								return true;
 							}
 						}

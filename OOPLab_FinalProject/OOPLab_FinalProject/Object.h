@@ -13,6 +13,8 @@ public:
 	bool spawn(Character&);
 	bool spawn(Monster&,bool);
 	Point2d& getpos();
+	int getdex() { return _dex; };
+	string getname() { return _name; };
 
 	friend class Gloomhaven;
 private:

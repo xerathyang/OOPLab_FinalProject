@@ -29,7 +29,7 @@ public:
 	bool cardcheck(Object&, int, int);
 	//
 	void MonsterFindAndAttack(Object &mon);
-	void CompareForMFA(pair<Object&, int> a, pair<Object&, int> b);
+	bool CompareForMFA(pair<Object&, int> a, pair<Object&, int> b);
 	bool FindBarrier(Point2d p1, Point2d p2);
 	//
 	int characterNum;
