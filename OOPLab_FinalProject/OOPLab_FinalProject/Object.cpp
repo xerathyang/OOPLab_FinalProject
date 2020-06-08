@@ -5,12 +5,14 @@ Object::Object() {
 	_ismonster = false;
 	_isactive = false;
 	_hasmoved = false;
+	_iselite = false;
 	_name = "";
 	_life = 0;
 	_atk = 0;
 	_def = 0;
 	_dex = 0;
 	_range = 0;
+	_shield = 0;
 	_startcardnum = 0;
 	_avaliablecard = 0;
 	_mapid = ' ';
@@ -37,6 +39,7 @@ bool Object::spawn(Monster& tar,bool iselite) {
 	_name = tar._name;
 	_startcardnum = 6;
 	if (iselite) {
+		_iselite = true;
 		_life = tar._elife;
 		_atk = tar._eatk;
 		_range = tar._erange;

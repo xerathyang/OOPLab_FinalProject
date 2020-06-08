@@ -26,10 +26,15 @@ public:
 	void printMap(int);
 	void printMap(int, Point2d&);
 	bool isoccupied(Point2d&);
+	bool isvalidpos(Point2d&);
 	bool cardcheck(Object&, int, int);
+	Object& findbyId(char);
+
+	void HandleAction(char);
+
 	//
-	void MonsterFindAndAttack(Object &mon);
-	bool CompareForMFA(pair<Object&, int> a, pair<Object&, int> b);
+	void MonsterFindAndAttack(Object &mon,int range);
+	//bool CompareForMFA(pair<Object&, int> a, pair<Object&, int> b);
 	bool FindBarrier(Point2d p1, Point2d p2);
 	//
 	int characterNum;

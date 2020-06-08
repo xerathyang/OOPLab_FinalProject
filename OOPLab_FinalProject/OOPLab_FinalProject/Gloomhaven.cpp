@@ -355,16 +355,26 @@ void Gloomhaven::actionphrase() {
 	Object* tmp;
 	for (unsigned i = 0; i < charlist.size(); i++) {
 		objectiter = actionline.begin();
-		tmp = new Object();
-		*tmp = charlist[i];
+		tmp = &charlist[i];
 		while (objectiter != actionline.end()) {
 			if (tmp->_dex < objectiter->_dex) {
 				actionline.insert(objectiter, *tmp);
 				break;
 			}
-			else {
-				objectiter++;
-			}	
+			else if (tmp->_dex==objectiter->_dex) {
+				if (cd1->find(tmp->_name).getdex(tmp->_card2) < cd1->find(objectiter->_name).getdex(objectiter->_card2)) {
+					actionline.insert(objectiter, *tmp);
+					break;
+				}
+				else if (cd1->find(tmp->_name).getdex(tmp->_card2) == cd1->find(objectiter->_name).getdex(objectiter->_card2)) {
+					if (tmp->_mapid < objectiter->_mapid) {
+						actionline.insert(objectiter, *tmp);
+						break;
+					}
+				}
+			}
+			objectiter++;
+			
 		}
 		if (objectiter == actionline.end()) {
 			actionline.push_back(*tmp);
@@ -396,7 +406,10 @@ void Gloomhaven::actionphrase() {
 	vector<Action> actiontmp;
 	for (unsigned i = 0; i < actionline.size(); i++) {
 		if (actionline[i]._ismonster) {
-			cout << actionline[i]._name << " " << actionline[i]._dex;
+			cout << actionline[i]._name << " ";
+			if (actionline[i]._dex < 10)
+				cout << "0";
+			cout << actionline[i]._dex;;
 			actiontmp = md1->find(actionline[i]._name).getskill(actionline[i]._card1);
 			actioniter = actiontmp.begin();
 			while (actioniter != actiontmp.end()) {
@@ -406,20 +419,74 @@ void Gloomhaven::actionphrase() {
 			cout << endl;
 		}
 		else {
-			cout << actionline[i]._mapid << " " << actionline[i]._dex << " "
-				<< actionline[i]._card1 << " " << actionline[i]._card2 << endl;
+			cout << actionline[i]._mapid << " ";
+			if (actionline[i]._dex < 10)
+				cout << "0";
+			cout << actionline[i]._dex << " ";
+			cout << actionline[i]._card1 << " " << actionline[i]._card2 << endl;
 		}
 	}
 
 
 	cout << "!" << endl;
-
+	string moveway;
+	Point2d aftermove;
 
 	//action part
 	for (unsigned actioncount = 0; actioncount < actionline.size(); actioncount++) {
 		//monster
 		if (actionline[actioncount]._ismonster) {
-			
+			actiontmp = md1->find(actionline[actioncount]._name).getskill(actionline[actioncount]._card1);
+			actioniter = actiontmp.begin();
+			while (actioniter != actiontmp.end()) {
+				switch (actioniter->gettype()) {
+				case 0:
+					moveway = actioniter->getmoveway();
+					aftermove = actionline[actioncount]._pos;
+					for (int i = 0; i < moveway.length(); i++) {
+						switch (moveway[i]) {
+						case 'w':
+							aftermove = aftermove - Point2d(0, 1);
+							break;
+						case 'a':
+							aftermove = aftermove - Point2d(1, 0);
+							break;
+						case 's':
+							aftermove = aftermove + Point2d(0, 1);
+							break;
+						case 'd':
+							aftermove = aftermove + Point2d(1, 0);
+							break;
+						default:
+							break;
+						}
+					}
+					if (!isoccupied(aftermove)&&isvalidpos(aftermove)) {
+						actionline[actioncount]._pos = aftermove;
+					}
+					printMap(0);
+					break;
+				case 1:
+					MonsterFindAndAttack(findbyId(actionline[actioncount]._mapid),actioniter->getparam2());
+					break;
+				case 2:
+					if (actionline[actioncount]._life + actioniter->getparam1() > md1->find(actionline[actioncount]._name).getlife(actionline[actioncount]._iselite)) {
+						actionline[actioncount]._life = md1->find(actionline[actioncount]._name).getlife(actionline[actioncount]._iselite);
+					}
+					else {
+						actionline[actioncount]._life += actioniter->getparam1();
+					}
+					cout << actionline[actioncount]._mapid << " heal " << actioniter->getparam1() << ", now hp is " << actionline[actioncount]._life << endl;
+					break;
+				case 3:
+					actionline[actioncount]._shield = actioniter->getparam1();
+					cout << actionline[actioncount]._mapid << " shiel " << actioniter->getparam1() << "this turn" << endl;
+					break;
+				default:
+					break;
+				}
+				actioniter++;
+			}
 		}
 		//character
 		else {
@@ -429,9 +496,13 @@ void Gloomhaven::actionphrase() {
 
 }
 
+void Gloomhaven::HandleAction(char) {
+
+}
+
 //for normal print
 void Gloomhaven::printMap(int mode) {
-	system("CLS");
+	//system("CLS");
 	MapData cachemap = *map1;
 
 	for (unsigned c = 0; c < charlist.size(); c++) {
@@ -515,6 +586,15 @@ bool Gloomhaven::isoccupied(Point2d& tar) {
 	return false;
 }
 
+bool Gloomhaven::isvalidpos(Point2d& tar) {
+	if (tar.x() < 0 || tar.y() < 0 || tar.x() >= map1->_mapx || tar.y() >= map1->_mapy)
+		return false;
+	if (map1->_map[tar.y()][tar.x()] != 1)
+		return false;
+	else
+		return true;
+}
+
 bool Gloomhaven::cardcheck(Object& tar, int card1, int card2) {
 	auto search1 = tar._cardindex.find(card1);
 	auto search2 = tar._cardindex.find(card2);
@@ -523,6 +603,27 @@ bool Gloomhaven::cardcheck(Object& tar, int card1, int card2) {
 	else
 		return true;
 }
+
+Object& Gloomhaven::findbyId(char id) {
+	if (id >= 'a') {
+		for (unsigned i = 0; i < monsterlist.size(); i++) {
+			if (monsterlist[i]._mapid == id) {
+				return monsterlist[i];
+			}
+		}
+	}
+	else {
+		for (unsigned i = 0; i < charlist.size(); i++) {
+			if (charlist[i]._mapid == id) {
+				return charlist[i];
+			}
+		}
+	}
+	Object* tmp = new Object();
+	return *tmp;
+}
+
+
 //Ken
 bool CompareForMFA(const pair<Object&, int> &a, const pair<Object&, int> &b)
 {
@@ -540,22 +641,27 @@ bool CompareForMFA(const pair<Object&, int> &a, const pair<Object&, int> &b)
 	return a.second < b.second;
 }
 
-void Gloomhaven::MonsterFindAndAttack(Object &mon)
+void Gloomhaven::MonsterFindAndAttack(Object &mon,int range)
 {
 
 	vector<pair<Object&, int>> tempCharlist;
-	for (int MFA = 0; MFA < charlist.size(); MFA++)
+	for (unsigned MFA = 0; MFA < charlist.size(); MFA++)
 	{
 		int X = charlist[MFA]._pos.x() - mon._pos.x();
 		int Y = charlist[MFA]._pos.y() - mon._pos.y();
-		if (abs(X) + abs(Y) <= mon._range && !FindBarrier(mon._pos, charlist[MFA]._pos))
+		if (abs(X) + abs(Y) <= (mon._range + range) && !FindBarrier(mon._pos, charlist[MFA]._pos))
 		{
 			pair<Object&, int> CharWithRange(charlist[MFA], abs(X) + abs(Y));
 			tempCharlist.push_back(CharWithRange);
 		}
 	}
 	if (tempCharlist.size() == 0) { return; }
-	//sort(tempCharlist.begin(), tempCharlist.end(), CompareForMFA);
+
+
+	sort(tempCharlist.begin(), tempCharlist.end(), CompareForMFA);
+	vector<pair<Object&, int>>::iterator pairiter = tempCharlist.begin();
+
+	cout << mon._mapid << " lock " << pairiter->first._mapid << "in distance " << pairiter->second << endl;
 	cout << "!" << endl;
 }
 

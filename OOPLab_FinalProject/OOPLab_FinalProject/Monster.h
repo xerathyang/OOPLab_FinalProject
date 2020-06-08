@@ -25,6 +25,12 @@ public:
 	Monster();
 	Monster(ifstream&);
 	int getdex(int);
+	int getlife(bool elite) {
+		if (elite)
+			return _elife;
+		else
+			return _nlife;
+	}
 	vector<Action>& getskill(int);
 
 	friend class Object;

@@ -18,9 +18,9 @@ public:
 
 	friend class Gloomhaven;
 private:
-	bool _ismonster, _isactive, _hasmoved;
+	bool _ismonster, _isactive, _hasmoved, _iselite;
 	string _name;
-	int _life, _atk, _def, _dex, _range, _startcardnum, _avaliablecard;
+	int _life, _atk, _def, _dex, _range, _shield, _startcardnum, _avaliablecard;
 	int _card1, _card2;
 	char _mapid;
 	Point2d _pos;
