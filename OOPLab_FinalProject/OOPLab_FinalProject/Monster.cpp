@@ -28,6 +28,15 @@ Monster::Monster(ifstream& fs) {
 	}
 }
 
+int Monster::getdex(int index) {
+	return this->_monstercard[index]._dex;
+}
+
+vector<Action>& Monster::getskill(int index) {
+	return this->_monstercard[index]._action;
+}
+
+
 MonsterData::MonsterData() {
 	_monsterlist.clear();
 	_monsterTypecount = 0;
@@ -87,45 +96,26 @@ MonsterSkill::MonsterSkill(ifstream& fs, int range) {
 		}
 		else if (cache == "move") {
 			ss >> cache;
-			for (int j = 0; j < 2; j++) {
-				switch (cache[j])
-				{
-				case 'w':
-					movpos[j] = 0;
-					break;
-				case 'a':
-					movpos[j] = 1;
-					break;
-				case 's':
-					movpos[j] = 2;
-					break;
-				case 'd':
-					movpos[j] = 3;
-					break;
-				default:
-					break;
-				}
-			}
-			tmp = new Action(0, movpos[0], movpos[1]);
+			tmp = new Action(0, cache);
 		}
 		else if (cache == "attack") {
 			ss >> param1;
 			if (range > 0) {
 				ss >> cache;
 				ss >> param2;
-				tmp = new Action(1, param1, param2);
+				tmp = new Action(1, param1, param2, true);
 			}
 			else {
-				tmp = new Action(1, param1, 0);
+				tmp = new Action(1, param1, 0, false);
 			}
 		}
 		else if (cache == "heal") {
 			ss >> param1;
-			tmp = new Action(2, param1, 0);
+			tmp = new Action(2, param1, 0, false);
 		}
 		else if (cache == "shield") {
 			ss >> param1;
-			tmp = new Action(3, param1, 0);
+			tmp = new Action(3, param1, 0, false);
 		}
 		_action.push_back(*tmp);
 	}

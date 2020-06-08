@@ -31,7 +31,7 @@ CharacterSkill::CharacterSkill(ifstream& fs, int index) {
 			if (cache == "move") {
 				//var1: move distance
 				ss >> var1;
-				(*tmp).push_back(Action(0, var1, 0));
+				(*tmp).push_back(Action(0, var1, 0, false));
 			}
 			else if (cache == "attack") {
 				//var1: attack damage
@@ -40,22 +40,22 @@ CharacterSkill::CharacterSkill(ifstream& fs, int index) {
 				if (cache == "range") {
 					//var2: attack range
 					ss >> var2;
-					(*tmp).push_back(Action(1, var1, var2));
+					(*tmp).push_back(Action(1, var1, var2, false));
 				}
 				else {
-					(*tmp).push_back(Action(1, var1, 0));
+					(*tmp).push_back(Action(1, var1, 0, false));
 					continue;
 				}
 			}
 			else if (cache == "heal") {
 				//var1: heal value
 				ss >> var1;
-				(*tmp).push_back(Action(2, var1, 0));
+				(*tmp).push_back(Action(2, var1, 0, false));
 			}
 			else if (cache == "shield") {
 				//var1: shield value
 				ss >> var1;
-				(*tmp).push_back(Action(3, var1, 0));
+				(*tmp).push_back(Action(3, var1, 0, false));
 			}
 		}
 		_action.push_back(*tmp);

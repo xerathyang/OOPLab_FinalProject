@@ -319,6 +319,7 @@ void Gloomhaven::preparephrase() {
 				auto searchmcard = iter->_cardindex.find(cache1);
 				if (searchmcard != iter->_cardindex.end()) {
 					iter->_card1 = cache1;
+					iter->_dex = md1->find(iter->_name).getdex(cache1);
 					iter->_cardindex.erase(cache1);
 					flag = true;
 				}
@@ -336,45 +337,74 @@ void Gloomhaven::preparephrase() {
 	}
 }
 
-void Gloomhaven::actionphrase() 
-{
+void Gloomhaven::actionphrase() {
+	//printMap(0);
+	cout << endl;
 
-}
-//// By Ken
-
-void Gloomhaven::CompareForMFA(pair<Object&, int> a, pair<Object&, int> b)
-{
-	if (a.second==b.second) 
-	{
-		if(a.first._dex == b.first._dex)
-		{
-			return a.first._name < b.first._name;
+	//get sort by dex, actionline store the Object's copy, need find back to original Object
+	vector<Object> actionline;
+	vector<Object>::iterator objectiter;
+	Object* tmp;
+	for (unsigned i = 0; i < charlist.size(); i++) {
+		objectiter = actionline.begin();
+		tmp = new Object();
+		*tmp = charlist[i];
+		while (objectiter != actionline.end()) {
+			if (tmp->_dex < objectiter->_dex) {
+				actionline.insert(objectiter, *tmp);
+				break;
+			}
+			else {
+				objectiter++;
+			}	
 		}
-		else 
-		{
-			return a.first._dex < b.first._dex;
-		}
-	}
-	return a.second < b.second;
-}
-
-void Gloomhaven::MonsterFindAndAttack(Object &mon)
-{
-	
-	vector<CharWithRange> tempCharlist;
-	for (int MFA = 0; MFA < charlist.size(); MFA++)
-	{
-		int X = charlist[MFA]._pos.x() - mon._pos.x();
-		int Y = charlist[MFA]._pos.y() - mon._pos.y();
-		if (abs(X) + abs(Y) <= mon._range && !map1->FindBarrier(mon._pos, charlist[MFA]._pos))
-		{
-			pair<Object&, int> CharWithRange(charlist[MFA], abs(X) + abs(Y));
-			tempCharlist.push_back(CharWithRange);
+		if (objectiter == actionline.end()) {
+			actionline.push_back(*tmp);
 		}
 	}
-	if (tempCharlist.size() <= 0) { return; }
-	sort(tempCharlist.begin(), tempCharlist.end(), CompareForMFA);
-	
+	for (unsigned i = 0; i < monsterlist.size(); i++) {
+		objectiter = actionline.begin();
+		tmp = new Object();
+		*tmp = monsterlist[i];
+		if (!tmp->_isactive)
+			continue;
+		while (objectiter != actionline.end()) {
+			if (tmp->_dex < objectiter->_dex) {
+				actionline.insert(objectiter, *tmp);
+				break;
+			}
+			else {
+				objectiter++;
+			}
+		}
+		if (objectiter == actionline.end()) {
+			actionline.push_back(*tmp);
+		}
+
+	}
+
+	//list action
+	vector<Action>::iterator actioniter;
+	vector<Action> actiontmp;
+	for (unsigned i = 0; i < actionline.size(); i++) {
+		if (actionline[i]._ismonster) {
+			cout << actionline[i]._name << " " << actionline[i]._dex;
+			actiontmp = md1->find(actionline[i]._name).getskill(actionline[i]._card1);
+			actioniter = actiontmp.begin();
+			while (actioniter != actiontmp.end()) {
+				actioniter->printAction();
+				actioniter++;
+			}
+			cout << endl;
+		}
+		else {
+			cout << actionline[i]._mapid << " " << actionline[i]._dex << " "
+				<< actionline[i]._card1 << " " << actionline[i]._card2 << endl;
+		}
+	}
+
+
+	cout << "!" << endl;
 }
 
 //for normal print

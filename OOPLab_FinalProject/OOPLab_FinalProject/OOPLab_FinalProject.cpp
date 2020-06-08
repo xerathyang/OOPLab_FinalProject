@@ -14,6 +14,7 @@ int main(int argc, char *argv[])
     driver.init();
     
     driver.preparephrase();
+    driver.actionphrase();
     //string input;
     //cin >> input;
     //if (input == "play") {
