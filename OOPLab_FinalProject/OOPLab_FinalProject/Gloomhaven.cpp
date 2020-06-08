@@ -78,6 +78,7 @@ void Gloomhaven::init() {
 			if (cardcache[j] >= tmp->_avaliablecard) {
 				i--;
 				cout << "This character doesn't have \"" << cardcache[j] << "\"." << endl;
+				flag = false;
 				break;
 			}
 			auto search = tmp->_cardindex.find(cardcache[j]);
@@ -87,9 +88,16 @@ void Gloomhaven::init() {
 			else {
 				i--;
 				cout << "You cannot bring duplicate cards, please choose again." << endl;
+				flag = false;
 				break;
 			}
 		}
+
+		if (!flag)
+			continue;
+
+
+		
 		tmp->_mapid = 'A' + i;
 		charlist.push_back(*tmp);
 	}
@@ -411,7 +419,7 @@ void Gloomhaven::actionphrase() {
 	for (unsigned actioncount = 0; actioncount < actionline.size(); actioncount++) {
 		//monster
 		if (actionline[actioncount]._ismonster) {
-			MonsterFindAndAttack(actionline[actioncount]);
+			
 		}
 		//character
 		else {
