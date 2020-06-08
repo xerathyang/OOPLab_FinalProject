@@ -336,8 +336,45 @@ void Gloomhaven::preparephrase() {
 	}
 }
 
-void Gloomhaven::actionphrase() {
+void Gloomhaven::actionphrase() 
+{
 
+}
+//// By Ken
+
+void Gloomhaven::CompareForMFA(pair<Object&, int> a, pair<Object&, int> b)
+{
+	if (a.second==b.second) 
+	{
+		if(a.first._dex == b.first._dex)
+		{
+			return a.first._name < b.first._name;
+		}
+		else 
+		{
+			return a.first._dex < b.first._dex;
+		}
+	}
+	return a.second < b.second;
+}
+
+void Gloomhaven::MonsterFindAndAttack(Object &mon)
+{
+	
+	vector<CharWithRange> tempCharlist;
+	for (int MFA = 0; MFA < charlist.size(); MFA++)
+	{
+		int X = charlist[MFA]._pos.x() - mon._pos.x();
+		int Y = charlist[MFA]._pos.y() - mon._pos.y();
+		if (abs(X) + abs(Y) <= mon._range && !map1->FindBarrier(mon._pos, charlist[MFA]._pos))
+		{
+			pair<Object&, int> CharWithRange(charlist[MFA], abs(X) + abs(Y));
+			tempCharlist.push_back(CharWithRange);
+		}
+	}
+	if (tempCharlist.size() <= 0) { return; }
+	sort(tempCharlist.begin(), tempCharlist.end(), CompareForMFA);
+	
 }
 
 //for normal print

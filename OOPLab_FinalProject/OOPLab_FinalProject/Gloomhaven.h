@@ -10,6 +10,8 @@
 #include "Character.h"
 #include "Map.h"
 #include "Object.h"
+#include <algorithm>
+#include <utility>
 
 using namespace std;
 
@@ -25,7 +27,10 @@ public:
 	void printMap(int, Point2d&);
 	bool isoccupied(Point2d&);
 	bool cardcheck(Object&, int, int);
-
+	//
+	void MonsterFindAndAttack(Object &mon);
+	void CompareForMFA(pair<Object&, int> a, pair<Object&, int> b);
+	//
 	int characterNum;
 
 private:
