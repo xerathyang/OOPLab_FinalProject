@@ -30,10 +30,10 @@ public:
 	bool cardcheck(Object&, int, int);
 	Object& findbyId(char);
 
-	void HandleAction(char);
+	void HandleAction(Object&, vector<Action>&);
 
 	//
-	void MonsterFindAndAttack(Object &mon,int range);
+	void MonsterFindAndAttack(Object &mon, int atk, int range);
 	//bool CompareForMFA(pair<Object&, int> a, pair<Object&, int> b);
 	bool FindBarrier(Point2d p1, Point2d p2);
 	//

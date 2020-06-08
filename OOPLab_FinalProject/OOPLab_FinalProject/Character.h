@@ -25,6 +25,8 @@ public:
 	Character(ifstream&);
 	int getdex(int);
 
+	vector<vector<Action>>& getskill(int);
+
 	friend class Object;
 	friend class CharacterData;
 private:

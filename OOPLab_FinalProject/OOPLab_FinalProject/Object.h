@@ -15,12 +15,15 @@ public:
 	Point2d& getpos();
 	int getdex() { return _dex; };
 	string getname() { return _name; };
+	void removecard(int, int);
+	void shuffle(int);
+	void regen(int);
 
 	friend class Gloomhaven;
 private:
-	bool _ismonster, _isactive, _hasmoved, _iselite;
+	bool _ismonster, _isactive, _hasmoved, _iselite, _isdead;
 	string _name;
-	int _life, _atk, _def, _dex, _range, _shield, _startcardnum, _avaliablecard;
+	int _life, _atk, _def, _dex, _range, _shield, _startcardnum, _avaliablecard, _maximumlife;
 	int _card1, _card2;
 	char _mapid;
 	Point2d _pos;

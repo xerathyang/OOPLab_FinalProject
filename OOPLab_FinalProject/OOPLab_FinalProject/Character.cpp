@@ -96,6 +96,10 @@ int Character::getdex(int index) {
 	return this->_charactercard[index]._dex;
 }
 
+vector<vector<Action>>& Character::getskill(int index) {
+	return this->_charactercard[index]._action;
+}
+
 CharacterData::CharacterData() {
 	_charTypecount = 0;
 }

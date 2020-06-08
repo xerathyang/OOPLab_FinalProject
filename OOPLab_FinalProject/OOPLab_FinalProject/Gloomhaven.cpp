@@ -1,5 +1,7 @@
 #include "Gloomhaven.h"
 
+using namespace std;
+
 Gloomhaven::Gloomhaven() {
 	characterFile = "";
 	monsterFile = "";
@@ -223,6 +225,9 @@ void Gloomhaven::preparephrase() {
 			continue;
 		}
 		tar = &charlist[charname - 'A'];
+		if (!tar->_isdead) {
+			cout << "This character is not avaliable now." << endl;
+		}
 		if (tar->_hasmoved) {
 			cout << "This character has moved." << endl;
 			continue;
@@ -431,6 +436,10 @@ void Gloomhaven::actionphrase() {
 	cout << "!" << endl;
 	string moveway;
 	Point2d aftermove;
+	int count;
+	string cache;
+	stringstream ss;
+
 
 	//action part
 	for (unsigned actioncount = 0; actioncount < actionline.size(); actioncount++) {
@@ -467,37 +476,171 @@ void Gloomhaven::actionphrase() {
 					printMap(0);
 					break;
 				case 1:
-					MonsterFindAndAttack(findbyId(actionline[actioncount]._mapid),actioniter->getparam2());
+					MonsterFindAndAttack(findbyId(actionline[actioncount]._mapid), actioniter->getparam1(), actioniter->getparam2());
 					break;
 				case 2:
-					if (actionline[actioncount]._life + actioniter->getparam1() > md1->find(actionline[actioncount]._name).getlife(actionline[actioncount]._iselite)) {
-						actionline[actioncount]._life = md1->find(actionline[actioncount]._name).getlife(actionline[actioncount]._iselite);
-					}
-					else {
-						actionline[actioncount]._life += actioniter->getparam1();
-					}
+					actionline[actioncount].regen(actioniter->getparam1());
 					cout << actionline[actioncount]._mapid << " heal " << actioniter->getparam1() << ", now hp is " << actionline[actioncount]._life << endl;
 					break;
 				case 3:
 					actionline[actioncount]._shield = actioniter->getparam1();
-					cout << actionline[actioncount]._mapid << " shiel " << actioniter->getparam1() << "this turn" << endl;
+					cout << actionline[actioncount]._mapid << " shield " << actioniter->getparam1() << " this turn" << endl;
 					break;
 				default:
 					break;
 				}
 				actioniter++;
+				if (DEBUG_MODE == 0)
+					getchar();
+				
 			}
 		}
 		//character
 		else {
+			cout << actionline[actioncount]._mapid << "'s turn: card " << actionline[actioncount]._card1;
 
+			if (actionline[actioncount]._card1 != -1) {
+				cout << " " << actionline[actioncount]._card2 << endl;
+			}
+			else
+				cout << endl;
+			while (getline(cin, cache)) {
+				ss.str("");
+				ss.clear();
+				if (cache == "check") {
+					for (int i = 0; i < charlist.size(); i++) {
+						if (charlist[i]._isactive && !charlist[i]._isdead) {
+							cout << charlist[i]._mapid << "-hp: " << charlist[i]._life << ", shield: "
+								<< charlist[i]._shield << endl;
+						}
+					}
+					for (int i = 0; i < monsterlist.size(); i++) {
+						if (monsterlist[i]._isactive && !monsterlist[i]._isdead) {
+							cout << monsterlist[i]._mapid << "-hp: " << monsterlist[i]._life << ", shield: "
+								<< monsterlist[i]._shield << endl;
+						}
+					}
+					continue;
+				}
+				if (actionline[actioncount]._card1 == -1) {
+					ss << cache;
+					ss >> count;
+					actionline[actioncount].shuffle(count);
+					actionline[actioncount].regen(2);
+					cout << actionline[actioncount]._mapid << "heal 2, now hp is" << actionline[actioncount]._life << endl;
+					cout << "remove card: " << count << endl;
+				}
+				else {
+					ss << cache[0];
+					ss >> count;
+					if (count == actionline[actioncount]._card1) {
+						if (cache[1] == 'u') {
+							HandleAction(actionline[actioncount], cd1->find(actionline[actioncount]._name).getskill(actionline[actioncount]._card1)[0]);
+							HandleAction(actionline[actioncount], cd1->find(actionline[actioncount]._name).getskill(actionline[actioncount]._card2)[1]);
+						}
+						else if (cache[1] == 'd') {
+							HandleAction(actionline[actioncount], cd1->find(actionline[actioncount]._name).getskill(actionline[actioncount]._card1)[1]);
+							HandleAction(actionline[actioncount], cd1->find(actionline[actioncount]._name).getskill(actionline[actioncount]._card2)[0]);
+						}
+					}
+					else if (count == actionline[actioncount]._card2) {
+						if (cache[1] == 'u') {
+							HandleAction(actionline[actioncount], cd1->find(actionline[actioncount]._name).getskill(actionline[actioncount]._card2)[0]);
+							HandleAction(actionline[actioncount], cd1->find(actionline[actioncount]._name).getskill(actionline[actioncount]._card1)[1]);
+						}
+						else if (cache[1] == 'd') {
+							HandleAction(actionline[actioncount], cd1->find(actionline[actioncount]._name).getskill(actionline[actioncount]._card2)[1]);
+							HandleAction(actionline[actioncount], cd1->find(actionline[actioncount]._name).getskill(actionline[actioncount]._card1)[0]);
+						}
+					}
+				}
+
+			}
+			
+			
 		}
 	}
 
 }
 
-void Gloomhaven::HandleAction(char) {
+void Gloomhaven::HandleAction(Object& tar, vector<Action>& action) {
+	string cache;
+	//int count;
+	stringstream ss;
+	Point2d aftermove;
+	for (unsigned i = 0; i < action.size(); i++) {
+		ss.str("");
+		ss.clear();
+		switch (action[i].gettype()) {
+		case 0:
+			getline(cin, cache);
+			if (cache.size() > action[i].getparam1()) {
+				cout << "error move!!!" << endl;
+				i--;
+				continue;
+			}
+			//stay at same position
+			if (cache == "e") {
+				continue;
+			}
 
+			aftermove = tar._pos;
+			for (int step = 0; step < cache.size(); step++) {
+				switch (cache[i]) {
+				case 'e':
+					break;
+				case 'w':
+					aftermove = aftermove - Point2d(0, 1);
+					break;
+				case 'a':
+					aftermove = aftermove - Point2d(1, 0);
+					break;
+				case 's':
+					aftermove = aftermove + Point2d(0, 1);
+					break;
+				case 'd':
+					aftermove = aftermove + Point2d(1, 0);
+					break;
+				default:
+					break;
+				}
+			}
+			if (!isoccupied(aftermove) && isvalidpos(aftermove)) {
+				tar._pos = aftermove;
+				printMap(0);
+			}
+			else {
+				cout << "error move!!!" << endl;
+				i--;
+				continue;
+			}
+
+			break;
+		case 1:
+			getline(cin, cache);
+			//give up attack
+			if (cache == "0") {
+				continue;
+			}
+			if (cache.length() > 1 || cache[0] > 'z' || cache[0] < 'a') {
+				cout << "error target!!!" << endl;
+				i--;
+				continue;
+			}
+			else if (findbyId(cache[0])._isdead || !findbyId(cache[0])._isactive || FindBarrier(tar._pos, findbyId(cache[0])._pos)) {
+				cout << "error target!!!" << endl;
+				i--;
+				continue;
+			}
+			else {
+
+			}
+			break;
+		case 2:
+		case 3:
+			break;
+		}
+	}
 }
 
 //for normal print
@@ -506,12 +649,12 @@ void Gloomhaven::printMap(int mode) {
 	MapData cachemap = *map1;
 
 	for (unsigned c = 0; c < charlist.size(); c++) {
-		if (charlist[c]._isactive)
+		if (charlist[c]._isactive && !charlist[c]._isdead)
 			cachemap.SetSymbol(charlist[c]._pos, charlist[c]._mapid);
 	}
 
 	for (unsigned c = 0; c < monsterlist.size(); c++) {
-		if (monsterlist[c]._isactive)
+		if (monsterlist[c]._isactive && !monsterlist[c]._isdead)
 			cachemap.SetSymbol(monsterlist[c]._pos, monsterlist[c]._mapid);
 	}
 
@@ -589,7 +732,7 @@ bool Gloomhaven::isoccupied(Point2d& tar) {
 bool Gloomhaven::isvalidpos(Point2d& tar) {
 	if (tar.x() < 0 || tar.y() < 0 || tar.x() >= map1->_mapx || tar.y() >= map1->_mapy)
 		return false;
-	if (map1->_map[tar.y()][tar.x()] != 1)
+	if (map1->_map[tar.y()][tar.x()] != 1 || map1->_map[tar.y()][tar.x()] != 3)
 		return false;
 	else
 		return true;
@@ -641,7 +784,7 @@ bool CompareForMFA(const pair<Object&, int> &a, const pair<Object&, int> &b)
 	return a.second < b.second;
 }
 
-void Gloomhaven::MonsterFindAndAttack(Object &mon,int range)
+void Gloomhaven::MonsterFindAndAttack(Object &mon,int atk,int range)
 {
 
 	vector<pair<Object&, int>> tempCharlist;
@@ -662,7 +805,23 @@ void Gloomhaven::MonsterFindAndAttack(Object &mon,int range)
 	vector<pair<Object&, int>>::iterator pairiter = tempCharlist.begin();
 
 	cout << mon._mapid << " lock " << pairiter->first._mapid << "in distance " << pairiter->second << endl;
-	cout << "!" << endl;
+	if (DEBUG_MODE == 0)
+		getchar();
+	int dmg = mon._atk + atk - pairiter->first._shield;
+	if (dmg < 0)
+		dmg = 0;
+	pairiter->first._life = pairiter->first._life - dmg;
+	cout << mon._mapid << " attack " << pairiter->first._mapid << " " << dmg << " damage,"
+		<< pairiter->first._mapid << " shield " << pairiter->first._shield << ", "
+		<< pairiter->first._mapid << " remain " << pairiter->first._life << " hp" << endl;
+	if (DEBUG_MODE == 0)
+		getchar();
+	//check target life is positive or not
+	if (pairiter->first._life <= 0) {
+		pairiter->first._isdead = true;
+		cout << pairiter->first._mapid << " is killed!!" << endl;
+		printMap(0);
+	}
 }
 
 bool Gloomhaven::FindBarrier(Point2d p1, Point2d p2)
