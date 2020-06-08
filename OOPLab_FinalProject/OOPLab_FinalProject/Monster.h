@@ -25,6 +25,7 @@ public:
 	Monster();
 	Monster(ifstream&);
 	int getdex(int);
+	vector<Action>& getskill(int);
 
 	friend class Object;
 	friend class MonsterData;

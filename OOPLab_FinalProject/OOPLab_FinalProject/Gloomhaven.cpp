@@ -338,48 +338,70 @@ void Gloomhaven::preparephrase() {
 }
 
 void Gloomhaven::actionphrase() {
+	//printMap(0);
+	cout << endl;
+
 	//get sort by dex, actionline store the Object's copy, need find back to original Object
 	vector<Object> actionline;
-	vector<Object>::iterator aiter;
+	vector<Object>::iterator objectiter;
 	Object* tmp;
 	for (unsigned i = 0; i < charlist.size(); i++) {
-		aiter = actionline.begin();
+		objectiter = actionline.begin();
 		tmp = new Object();
 		*tmp = charlist[i];
-		while (aiter != actionline.end()) {
-			if (tmp->_dex < aiter->_dex) {
-				actionline.insert(aiter, *tmp);
+		while (objectiter != actionline.end()) {
+			if (tmp->_dex < objectiter->_dex) {
+				actionline.insert(objectiter, *tmp);
 				break;
 			}
 			else {
-				aiter++;
+				objectiter++;
 			}	
 		}
-		if (aiter == actionline.end()) {
+		if (objectiter == actionline.end()) {
 			actionline.push_back(*tmp);
 		}
 	}
 	for (unsigned i = 0; i < monsterlist.size(); i++) {
-		aiter = actionline.begin();
+		objectiter = actionline.begin();
 		tmp = new Object();
 		*tmp = monsterlist[i];
 		if (!tmp->_isactive)
 			continue;
-		while (aiter != actionline.end()) {
-			if (tmp->_dex < aiter->_dex) {
-				actionline.insert(aiter, *tmp);
+		while (objectiter != actionline.end()) {
+			if (tmp->_dex < objectiter->_dex) {
+				actionline.insert(objectiter, *tmp);
 				break;
 			}
 			else {
-				aiter++;
+				objectiter++;
 			}
 		}
-		if (aiter == actionline.end()) {
+		if (objectiter == actionline.end()) {
 			actionline.push_back(*tmp);
 		}
 
 	}
 
+	//list action
+	vector<Action>::iterator actioniter;
+	vector<Action> actiontmp;
+	for (unsigned i = 0; i < actionline.size(); i++) {
+		if (actionline[i]._ismonster) {
+			cout << actionline[i]._name << " " << actionline[i]._dex;
+			actiontmp = md1->find(actionline[i]._name).getskill(actionline[i]._card1);
+			actioniter = actiontmp.begin();
+			while (actioniter != actiontmp.end()) {
+				actioniter->printAction();
+				actioniter++;
+			}
+			cout << endl;
+		}
+		else {
+			cout << actionline[i]._mapid << " " << actionline[i]._dex << " "
+				<< actionline[i]._card1 << " " << actionline[i]._card2 << endl;
+		}
+	}
 
 
 	cout << "!" << endl;
