@@ -454,6 +454,8 @@ void Gloomhaven::actionphrase() {
 	for (unsigned actioncount = 0; actioncount < actionline.size(); actioncount++) {
 		//monster
 		if (actionline[actioncount]._ismonster) {
+			if (findbyId(actionline[actioncount]._mapid)._isdead)
+				continue;
 			actiontmp = md1->find(actionline[actioncount]._name).getskill(actionline[actioncount]._card1);
 			actioniter = actiontmp.begin();
 			while (actioniter != actiontmp.end()) {
@@ -506,7 +508,7 @@ void Gloomhaven::actionphrase() {
 		}
 		//character
 		else {
-			if (actionline[actioncount]._isdead) {
+			if (findbyId(actionline[actioncount]._mapid)._isdead) {
 				continue;
 			}
 			cout << actionline[actioncount]._mapid << "'s turn: card " << actionline[actioncount]._card1;

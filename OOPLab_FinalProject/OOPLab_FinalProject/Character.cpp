@@ -97,6 +97,9 @@ Character::Character(ifstream& fs) {
 }
 
 int Character::getdex(int index) {
+	if (index == -1) {
+		return 99;
+	}
 	return this->_charactercard[index]._dex;
 }
 
