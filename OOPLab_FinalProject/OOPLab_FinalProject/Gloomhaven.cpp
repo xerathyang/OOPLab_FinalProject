@@ -678,8 +678,9 @@ void Gloomhaven::HandleAction(Object& tar, vector<Action>& action) {
 				default:
 					break;
 				}
-				if (!isfriend(aftermove, false) || !isvalidpos(aftermove)) {
-					break;
+				if (isoccupied(aftermove) || !isvalidpos(aftermove)) {
+					if (!isfriend(aftermove, false))
+						break;
 				}
 					
 			}
