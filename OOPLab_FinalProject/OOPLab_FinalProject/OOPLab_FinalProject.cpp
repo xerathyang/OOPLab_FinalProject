@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
     Gloomhaven driver;
     driver.setFilePath(argv[1], argv[2]);
     driver.init();
-    while (gamestat) {
+    while (!driver.isend()) {
         driver.preparephrase();
         driver.actionphrase();
         driver.checkdoor();

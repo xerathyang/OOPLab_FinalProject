@@ -32,6 +32,7 @@ public:
 			return _nlife;
 	}
 	vector<Action>& getskill(int);
+	bool needshuffle(int index) { return _monstercard[index]._shuffle; };
 
 	friend class Object;
 	friend class MonsterData;

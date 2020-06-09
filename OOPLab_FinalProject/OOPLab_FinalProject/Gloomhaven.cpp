@@ -31,7 +31,7 @@ void Gloomhaven::init() {
 
 	//FOR DEBUG MODE
 
-	//cout << "Use Debug Mode?";
+	//cout << "Use Debug Mode? 1 for ON.";
 	//getline(cin, cache);
 	//if (cache == "1") {
 	//	DEBUG_MODE = 1;
@@ -338,8 +338,13 @@ void Gloomhaven::preparephrase() {
 			continue;
 		}
 
-		if (DEBUG_MODE == 0) {
+		if (DEBUG_MODE == 1) {
 			//ascend choose card
+			iter->_card1 = *(iter->_cardindex.begin());
+			iter->_dex = md1->find(iter->_name).getdex(iter->_card1);
+			iter->_cardindex.erase(iter->_card1);
+			iter->_discardindex.insert(iter->_card1);
+
 		}
 		else {
 			flag = false;
@@ -350,6 +355,7 @@ void Gloomhaven::preparephrase() {
 					iter->_card1 = cache1;
 					iter->_dex = md1->find(iter->_name).getdex(cache1);
 					iter->_cardindex.erase(cache1);
+					iter->_discardindex.insert(cache1);
 					flag = true;
 				}
 			}
@@ -494,6 +500,9 @@ void Gloomhaven::actionphrase() {
 				continue;
 			actiontmp = md1->find(actionline[actioncount]._name).getskill(actionline[actioncount]._card1);
 			actioniter = actiontmp.begin();
+			if (md1->find(actionline[actioncount]._name).needshuffle(actionline[actioncount]._card1)) {
+				findbyId(actionline[actioncount]._mapid).shuffle(-1);
+			}
 			while (actioniter != actiontmp.end()) {
 				switch (actioniter->gettype()) {
 				case 0:
@@ -533,7 +542,7 @@ void Gloomhaven::actionphrase() {
 					break;
 				case 2:
 					findbyId(actionline[actioncount]._mapid).regen(actioniter->getparam1());
-					cout << actionline[actioncount]._mapid << " heal " << actioniter->getparam1() << ", now hp is " << actionline[actioncount]._life << endl;
+					cout << actionline[actioncount]._mapid << " heal " << actioniter->getparam1() << ", now hp is " << findbyId(actionline[actioncount]._mapid)._life << endl;
 					break;
 				case 3:
 					findbyId(actionline[actioncount]._mapid)._shield = actioniter->getparam1();
@@ -591,7 +600,7 @@ void Gloomhaven::actionphrase() {
 					}
 					
 					findbyId(actionline[actioncount]._mapid).regen(2);
-					cout << actionline[actioncount]._mapid << " heal 2, now hp is " << actionline[actioncount]._life << endl;
+					cout << actionline[actioncount]._mapid << " heal 2, now hp is " << findbyId(actionline[actioncount]._mapid)._life << endl;
 					cout << "remove card: " << count << endl;
 					break;
 				}
@@ -674,6 +683,32 @@ void Gloomhaven::roundreset() {
 
 }
 
+bool Gloomhaven::isend() {
+	bool ending = true;
+	for (int i = 0; i < monsterlist.size(); i++) {
+		if (!monsterlist[i]._isdead) {
+			ending = false;
+			break;
+		}
+	}
+	if (ending) {
+		cout << "character win~" << endl;
+		return true;
+	}
+	ending = true;
+	for (int i = 0; i < charlist.size(); i++) {
+		if (!charlist[i]._isdead) {
+			ending = false;
+			break;
+		}
+	}
+	if (ending) {
+		cout << "character win~" << endl;
+		return true;
+	}
+	return false;
+}
+
 void Gloomhaven::HandleAction(Object& tar, vector<Action>& action) {
 	string cache;
 	//int count;
@@ -724,6 +759,7 @@ void Gloomhaven::HandleAction(Object& tar, vector<Action>& action) {
 			if (!isoccupied(aftermove) && isvalidpos(aftermove)) {
 				findbyId(tar._mapid)._pos = aftermove;
 				printMap(0);
+				cout << "move!!!" << endl;
 			}
 			else {
 				cout << "error move!!!" << endl;
@@ -967,8 +1003,6 @@ void Gloomhaven::MonsterFindAndAttack(Object &mon,int atk,int range)
 	vector<pair<Object&, int>>::iterator pairiter = tempCharlist.begin();
 
 	cout << mon._mapid << " lock " << pairiter->first._mapid << " in distance " << pairiter->second << endl;
-	if (DEBUG_MODE == 0)
-		getchar();
 	int dmg = mon._atk + atk - pairiter->first._shield;
 	if (dmg < 0)
 		dmg = 0;
