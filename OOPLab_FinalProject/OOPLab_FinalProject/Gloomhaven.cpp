@@ -536,6 +536,10 @@ void Gloomhaven::actionphrase() {
 				else {
 					ss << cache[0];
 					ss >> count;
+					if (actionline[actioncount]._card1 != count && actionline[actioncount]._card2 != count) {
+						cout << "You don't have this card now." << endl;
+						continue;
+					}
 					if (count == actionline[actioncount]._card1) {
 						if (cache[1] == 'u') {
 							HandleAction(findbyId(actionline[actioncount]._mapid), cd1->find(actionline[actioncount]._name).getskill(actionline[actioncount]._card1)[0]);
