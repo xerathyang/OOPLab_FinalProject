@@ -628,7 +628,7 @@ void Gloomhaven::HandleAction(Object& tar, vector<Action>& action) {
 		switch (action[i].gettype()) {
 		case 0:
 			getline(cin, cache);
-			if (cache.length() > action[i].getparam1()) {
+			if (cache.length() != action[i].getparam1()) {
 				cout << "error move!!!" << endl;
 				i--;
 				continue;
@@ -728,7 +728,7 @@ void Gloomhaven::HandleAction(Object& tar, vector<Action>& action) {
 
 //for normal print
 void Gloomhaven::printMap(int mode) {
-	system("CLS");
+	//system("CLS");
 	MapData cachemap = *map1;
 
 	for (unsigned c = 0; c < charlist.size(); c++) {
@@ -806,7 +806,7 @@ bool Gloomhaven::isoccupied(Point2d& tar) {
 			return true;
 	}
 	for (unsigned i = 0; i < monsterlist.size(); i++) {
-		if (charlist[i]._pos == tar)
+		if (monsterlist[i]._pos == tar)
 			return true;
 	}
 	return false;
