@@ -703,7 +703,7 @@ bool Gloomhaven::isend() {
 		}
 	}
 	if (ending) {
-		cout << "character win~" << endl;
+		cout << "monster win~" << endl;
 		return true;
 	}
 	return false;
