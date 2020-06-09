@@ -67,7 +67,7 @@ vector<vector<char>> MapData::generateVisiblefilter() {
 
 //find area by recursive
 void MapData::generatedriver(vector<vector<char>> &tar,int x,int y) {
-	if (tar[y][x] == '1' || tar[y][x] == '2')
+	if (tar[y][x] == '1' || tar[y][x] == '2' || tar[y][x] == '3')
 		tar[y][x] = '+';
 	else
 		return;

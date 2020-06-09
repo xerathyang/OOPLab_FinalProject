@@ -7,6 +7,7 @@ Gloomhaven::Gloomhaven() {
 	monsterFile = "";
 	characterNum = 0;
 	DEBUG_MODE = 1;
+	round = 1;
 }
 
 void Gloomhaven::setFilePath(string cFile, string mFile) {
@@ -214,6 +215,7 @@ void Gloomhaven::preparephrase() {
 	set<int>::iterator ster;
 
 	printMap(0);
+	cout << "round " << round << ":" << endl;
 	//character prepare
 	while (getline(cin, input)) {
 		ss.str("");
@@ -433,7 +435,7 @@ void Gloomhaven::actionphrase() {
 	}
 
 
-	cout << "!" << endl;
+	//cout << "!" << endl;
 	string moveway;
 	Point2d aftermove;
 	int count;
@@ -588,7 +590,7 @@ void Gloomhaven::HandleAction(Object& tar, vector<Action>& action) {
 
 			aftermove = tar._pos;
 			for (int step = 0; step < cache.size(); step++) {
-				switch (cache[i]) {
+				switch (cache[step]) {
 				case 'e':
 					break;
 				case 'w':
@@ -654,6 +656,10 @@ void Gloomhaven::HandleAction(Object& tar, vector<Action>& action) {
 					i--;
 					continue;
 
+				}
+				if (findbyId(cache[0])._life <= 0) {
+					findbyId(cache[0])._isdead = true;
+					cout << findbyId(cache[0])._mapid << " is killed!!" << endl;
 				}
 			}
 			break;

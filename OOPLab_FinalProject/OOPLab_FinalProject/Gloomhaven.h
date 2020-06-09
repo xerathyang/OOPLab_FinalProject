@@ -5,13 +5,14 @@
 #include <vector>
 #include <set>
 #include <sstream>
-#include <time.h>
 #include "Monster.h"
 #include "Character.h"
 #include "Map.h"
 #include "Object.h"
 #include <algorithm>
 #include <utility>
+#include <time.h>
+
 
 using namespace std;
 
@@ -42,6 +43,7 @@ public:
 
 private:
 	int DEBUG_MODE;
+	unsigned round;
 	string characterFile, monsterFile;
 	CharacterData* cd1;
 	MonsterData* md1;
