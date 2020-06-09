@@ -308,8 +308,6 @@ void Gloomhaven::preparephrase() {
 	}
 
 	//monster prepare
-
-	//bug
 	cache1 = 0;
 	cache2 = -1;
 	set<string>::iterator miter = monstertype.begin();
@@ -391,21 +389,27 @@ void Gloomhaven::actionphrase() {
 		}
 	}
 	for (unsigned i = 0; i < monsterlist.size(); i++) {
-		objectiter = actionline.begin();
+		unsigned point = 0;
 		tmp = new Object();
 		*tmp = monsterlist[i];
 		if (!tmp->_isactive)
 			continue;
-		while (objectiter != actionline.end()) {
-			if (tmp->_dex < objectiter->_dex) {
+		while (point<monsterlist.size()) {
+			if (tmp->_dex < monsterlist[point]._dex) {
+				objectiter = actionline.begin();
+				while (objectiter->_mapid!=actionline[point]._mapid)
+				{
+					objectiter++;
+				}
 				actionline.insert(objectiter, *tmp);
 				break;
 			}
 			else {
-				objectiter++;
+				point++;
 			}
 		}
-		if (objectiter == actionline.end()) {
+		//bug
+		if (point >= actionline.size()) {
 			actionline.push_back(*tmp);
 		}
 

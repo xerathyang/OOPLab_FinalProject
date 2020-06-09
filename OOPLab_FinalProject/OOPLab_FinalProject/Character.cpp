@@ -21,11 +21,13 @@ CharacterSkill::CharacterSkill(ifstream& fs, int index) {
 	//get index and dexterity
 	ss >> _index >> _dex;
 	
+	b = "1";
 	//get up and down part
 	for (int j = 0; j < 2; j++) {
 
 		//infinite loop
-		while (cache != "-" && ss>>cache) {
+		ss >> cache;
+		while (cache != "-" && b != cache) {
 			if (cache == "-")
 				break;
 			if (cache == "move") {
@@ -57,6 +59,8 @@ CharacterSkill::CharacterSkill(ifstream& fs, int index) {
 				ss >> var1;
 				(*tmp).push_back(Action(3, var1, 0, false));
 			}
+			b = cache;
+			ss >> cache;
 		}
 		_action.push_back(*tmp);
 		tmp = new vector<Action>;
