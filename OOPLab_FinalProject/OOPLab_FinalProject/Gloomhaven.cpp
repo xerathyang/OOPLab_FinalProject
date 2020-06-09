@@ -805,11 +805,11 @@ void Gloomhaven::printMap(int mode, Point2d& para1) {
 //for check if the position is occupied by other object 
 bool Gloomhaven::isoccupied(Point2d& tar) {
 	for (unsigned i = 0; i < charlist.size(); i++) {
-		if (charlist[i]._pos == tar)
+		if (!charlist[i]._isdead && charlist[i]._pos == tar)
 			return true;
 	}
 	for (unsigned i = 0; i < monsterlist.size(); i++) {
-		if (monsterlist[i]._pos == tar)
+		if (!monsterlist[i]._isdead && monsterlist[i]._pos == tar)
 			return true;
 	}
 	return false;
