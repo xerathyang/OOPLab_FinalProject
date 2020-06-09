@@ -218,6 +218,14 @@ void Gloomhaven::preparephrase() {
 	cout << "round " << round << ":" << endl;
 	round++;
 	//character prepare
+	for (unsigned i = 0; i < charlist.size(); i++) {
+		if (charlist[i]._cardindex.size() < 2 && charlist[i]._discardindex.size() < 2) {
+			charlist[i]._isdead = true;
+			printMap(0);
+			cout << charlist[i]._mapid << " is killed!!" << endl;
+		}
+	}
+
 	while (getline(cin, input)) {
 		ss.str("");
 		ss.clear();
@@ -238,10 +246,10 @@ void Gloomhaven::preparephrase() {
 		ss >> input;
 
 		if (input == "check") {
-			if (tar->_cardindex.size() < 2) {
-				cout << "This character only can take long break." << endl;
-				continue;
-			}
+			//if (tar->_cardindex.size() < 2) {
+			//	cout << "This character only can take long break." << endl;
+			//	continue;
+			//}
 			cout << "hand: ";
 			ster = tar->_cardindex.begin();
 			if (ster != tar->_cardindex.end()) {
@@ -266,6 +274,10 @@ void Gloomhaven::preparephrase() {
 		}
 		//long break
 		else if (input=="-1") {
+			if (tar->_discardindex.size() < 2) {
+				cout << "This character cannot take long break now." << endl;
+				continue;
+			}
 			tar->_hasmoved = true;
 			tar->_dex = 99;
 			tar->_card1 = -1;
@@ -273,6 +285,7 @@ void Gloomhaven::preparephrase() {
 		}
 		//choose 2 card
 		else if (ss>>cache2) {
+
 			ss.str("");
 			ss.clear();
 			ss << input;
