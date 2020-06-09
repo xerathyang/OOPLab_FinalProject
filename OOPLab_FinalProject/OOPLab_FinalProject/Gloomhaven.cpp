@@ -6,7 +6,7 @@ Gloomhaven::Gloomhaven() {
 	characterFile = "";
 	monsterFile = "";
 	characterNum = 0;
-	DEBUG_MODE = 0;
+	DEBUG_MODE = 1;
 }
 
 void Gloomhaven::setFilePath(string cFile, string mFile) {
@@ -322,7 +322,7 @@ void Gloomhaven::preparephrase() {
 			continue;
 		}
 
-		if (DEBUG_MODE == 1) {
+		if (DEBUG_MODE == 0) {
 			//ascend choose card
 		}
 		else {
@@ -608,7 +608,7 @@ void Gloomhaven::HandleAction(Object& tar, vector<Action>& action) {
 				}
 			}
 			if (!isoccupied(aftermove) && isvalidpos(aftermove)) {
-				tar._pos = aftermove;
+				findbyId(tar._mapid)._pos = aftermove;
 				printMap(0);
 			}
 			else {
@@ -635,15 +635,34 @@ void Gloomhaven::HandleAction(Object& tar, vector<Action>& action) {
 				continue;
 			}
 			else {
-				//////
+				//melee
+				if (tar._range <= 0 && Objectdistance(tar, findbyId(cache[0]), 1)) {
+					findbyId(cache[0]).damage(tar._atk + action[i].getparam1());
+					cout << tar._mapid << " attack " << findbyId(cache[0])._mapid << " " << action[i].getparam1()
+						<< " damage, " << findbyId(cache[0])._mapid << " shield " << findbyId(cache[0])._shield
+						<< ", " << findbyId(cache[0])._mapid << " remain " << findbyId(cache[0])._life << " hp";
+				}
+				//range
+				else if(Objectdistance(tar, findbyId(cache[0]), tar._range+action[i].getparam2())){
+					findbyId(cache[0]).damage(tar._atk + action[i].getparam1());
+					cout << tar._mapid << " attack " << findbyId(cache[0])._mapid << " " << action[i].getparam1()
+						<< " damage, " << findbyId(cache[0])._mapid << " shield " << findbyId(cache[0])._shield
+						<< ", " << findbyId(cache[0])._mapid << " remain " << findbyId(cache[0])._life << " hp";
+				}
+				else {
+					cout << "error target!!!" << endl;
+					i--;
+					continue;
+
+				}
 			}
 			break;
 		case 2:
-			tar.regen(action[i].getparam1());
+			findbyId(tar._mapid).regen(action[i].getparam1());
 			cout << tar._mapid << " heal " << action[i].getparam1() << ", now hp is " << tar._life << endl;
 			break;
 		case 3:
-			tar._shield = action[i].getparam1();
+			findbyId(tar._mapid)._shield = action[i].getparam1();
 			cout << tar._mapid << " shield " << tar._shield << " this turn." << endl;
 			break;
 		}
@@ -652,7 +671,7 @@ void Gloomhaven::HandleAction(Object& tar, vector<Action>& action) {
 
 //for normal print
 void Gloomhaven::printMap(int mode) {
-	//system("CLS");
+	system("CLS");
 	MapData cachemap = *map1;
 
 	for (unsigned c = 0; c < charlist.size(); c++) {
@@ -826,8 +845,8 @@ void Gloomhaven::MonsterFindAndAttack(Object &mon,int atk,int range)
 	//check target life is positive or not
 	if (pairiter->first._life <= 0) {
 		pairiter->first._isdead = true;
-		cout << pairiter->first._mapid << " is killed!!" << endl;
 		printMap(0);
+		cout << pairiter->first._mapid << " is killed!!" << endl;
 	}
 }
 
@@ -913,4 +932,14 @@ bool Gloomhaven::FindBarrier(Point2d p1, Point2d p2)
 		}
 	}
 	return false;
+}
+
+bool Gloomhaven::Objectdistance(Object& tar1, Object& tar2, int dis) {
+	int X = tar1._pos.x() - tar2._pos.x();
+	int Y = tar1._pos.y() - tar2._pos.y();
+	if (abs(X) + abs(Y) <= dis)
+		return true;
+	else
+		return false;
+
 }

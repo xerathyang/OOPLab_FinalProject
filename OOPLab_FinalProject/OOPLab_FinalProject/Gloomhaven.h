@@ -31,6 +31,7 @@ public:
 	Object& findbyId(char);
 
 	void HandleAction(Object&, vector<Action>&);
+	bool Objectdistance(Object&, Object&, int);
 
 	//
 	void MonsterFindAndAttack(Object &mon, int atk, int range);
