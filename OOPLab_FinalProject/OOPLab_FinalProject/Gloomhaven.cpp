@@ -216,6 +216,7 @@ void Gloomhaven::preparephrase() {
 
 	printMap(0);
 	cout << "round " << round << ":" << endl;
+	round++;
 	//character prepare
 	while (getline(cin, input)) {
 		ss.str("");
@@ -473,7 +474,7 @@ void Gloomhaven::actionphrase() {
 						}
 					}
 					if (!isoccupied(aftermove)&&isvalidpos(aftermove)) {
-						actionline[actioncount]._pos = aftermove;
+						findbyId(actionline[actioncount]._mapid)._pos = aftermove;
 					}
 					printMap(0);
 					break;
