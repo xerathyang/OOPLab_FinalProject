@@ -23,7 +23,7 @@
     <ProjectGuid>{51D2AA56-2303-40C7-B2C5-7A04F209AEC8}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>OOPLabFinalProject</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

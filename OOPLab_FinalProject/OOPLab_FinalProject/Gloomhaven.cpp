@@ -536,22 +536,22 @@ void Gloomhaven::actionphrase() {
 					ss >> count;
 					if (count == actionline[actioncount]._card1) {
 						if (cache[1] == 'u') {
-							HandleAction(actionline[actioncount], cd1->find(actionline[actioncount]._name).getskill(actionline[actioncount]._card1)[0]);
-							HandleAction(actionline[actioncount], cd1->find(actionline[actioncount]._name).getskill(actionline[actioncount]._card2)[1]);
+							HandleAction(findbyId(actionline[actioncount]._mapid), cd1->find(actionline[actioncount]._name).getskill(actionline[actioncount]._card1)[0]);
+							HandleAction(findbyId(actionline[actioncount]._mapid), cd1->find(actionline[actioncount]._name).getskill(actionline[actioncount]._card2)[1]);
 						}
 						else if (cache[1] == 'd') {
-							HandleAction(actionline[actioncount], cd1->find(actionline[actioncount]._name).getskill(actionline[actioncount]._card1)[1]);
-							HandleAction(actionline[actioncount], cd1->find(actionline[actioncount]._name).getskill(actionline[actioncount]._card2)[0]);
+							HandleAction(findbyId(actionline[actioncount]._mapid), cd1->find(actionline[actioncount]._name).getskill(actionline[actioncount]._card1)[1]);
+							HandleAction(findbyId(actionline[actioncount]._mapid), cd1->find(actionline[actioncount]._name).getskill(actionline[actioncount]._card2)[0]);
 						}
 					}
 					else if (count == actionline[actioncount]._card2) {
 						if (cache[1] == 'u') {
-							HandleAction(actionline[actioncount], cd1->find(actionline[actioncount]._name).getskill(actionline[actioncount]._card2)[0]);
-							HandleAction(actionline[actioncount], cd1->find(actionline[actioncount]._name).getskill(actionline[actioncount]._card1)[1]);
+							HandleAction(findbyId(actionline[actioncount]._mapid), cd1->find(actionline[actioncount]._name).getskill(actionline[actioncount]._card2)[0]);
+							HandleAction(findbyId(actionline[actioncount]._mapid), cd1->find(actionline[actioncount]._name).getskill(actionline[actioncount]._card1)[1]);
 						}
 						else if (cache[1] == 'd') {
-							HandleAction(actionline[actioncount], cd1->find(actionline[actioncount]._name).getskill(actionline[actioncount]._card2)[1]);
-							HandleAction(actionline[actioncount], cd1->find(actionline[actioncount]._name).getskill(actionline[actioncount]._card1)[0]);
+							HandleAction(findbyId(actionline[actioncount]._mapid), cd1->find(actionline[actioncount]._name).getskill(actionline[actioncount]._card2)[1]);
+							HandleAction(findbyId(actionline[actioncount]._mapid), cd1->find(actionline[actioncount]._name).getskill(actionline[actioncount]._card1)[0]);
 						}
 					}
 					break;
@@ -640,14 +640,14 @@ void Gloomhaven::HandleAction(Object& tar, vector<Action>& action) {
 					findbyId(cache[0]).damage(tar._atk + action[i].getparam1());
 					cout << tar._mapid << " attack " << findbyId(cache[0])._mapid << " " << action[i].getparam1()
 						<< " damage, " << findbyId(cache[0])._mapid << " shield " << findbyId(cache[0])._shield
-						<< ", " << findbyId(cache[0])._mapid << " remain " << findbyId(cache[0])._life << " hp";
+						<< ", " << findbyId(cache[0])._mapid << " remain " << findbyId(cache[0])._life << " hp" << endl;
 				}
 				//range
 				else if(Objectdistance(tar, findbyId(cache[0]), tar._range+action[i].getparam2())){
 					findbyId(cache[0]).damage(tar._atk + action[i].getparam1());
 					cout << tar._mapid << " attack " << findbyId(cache[0])._mapid << " " << action[i].getparam1()
 						<< " damage, " << findbyId(cache[0])._mapid << " shield " << findbyId(cache[0])._shield
-						<< ", " << findbyId(cache[0])._mapid << " remain " << findbyId(cache[0])._life << " hp";
+						<< ", " << findbyId(cache[0])._mapid << " remain " << findbyId(cache[0])._life << " hp" << endl;
 				}
 				else {
 					cout << "error target!!!" << endl;
