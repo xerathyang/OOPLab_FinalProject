@@ -362,17 +362,23 @@ void Gloomhaven::actionphrase() {
 	vector<Object>::iterator objectiter;
 	Object* tmp;
 	for (unsigned i = 0; i < charlist.size(); i++) {
+		unsigned point = 0;
 		if (charlist[i]._isdead || !charlist[i]._isactive) {
 			continue;
 		}
 		objectiter = actionline.begin();
 		tmp = &charlist[i];
-		while (objectiter != actionline.end()) {
-			if (tmp->_dex < objectiter->_dex) {
+		while (point < charlist.size()) {
+			if (tmp->_dex < actionline[point]._dex) {
+				objectiter = actionline.begin();
+				while (objectiter->_mapid != actionline[point]._mapid)
+				{
+					objectiter++;
+				}
 				actionline.insert(objectiter, *tmp);
 				break;
 			}
-			else if (tmp->_dex==objectiter->_dex) {
+			else if (tmp->_dex == actionline[point]._dex) {
 				if (cd1->find(tmp->_name).getdex(tmp->_card2) < cd1->find(objectiter->_name).getdex(objectiter->_card2)) {
 					actionline.insert(objectiter, *tmp);
 					break;
@@ -384,10 +390,10 @@ void Gloomhaven::actionphrase() {
 					}
 				}
 			}
-			objectiter++;
+			point++;
 			
 		}
-		if (objectiter == actionline.end()) {
+		if (point>=actionline.size()) {
 			actionline.push_back(*tmp);
 		}
 	}
@@ -411,7 +417,6 @@ void Gloomhaven::actionphrase() {
 				point++;
 			}
 		}
-		//bug
 		if (point >= actionline.size()) {
 			actionline.push_back(*tmp);
 		}
