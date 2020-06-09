@@ -225,7 +225,7 @@ void Gloomhaven::preparephrase() {
 			continue;
 		}
 		tar = &charlist[charname - 'A'];
-		if (!tar->_isdead) {
+		if (tar->_isdead) {
 			cout << "This character is not avaliable now." << endl;
 		}
 		if (tar->_hasmoved) {
@@ -529,6 +529,7 @@ void Gloomhaven::actionphrase() {
 					actionline[actioncount].regen(2);
 					cout << actionline[actioncount]._mapid << "heal 2, now hp is" << actionline[actioncount]._life << endl;
 					cout << "remove card: " << count << endl;
+					break;
 				}
 				else {
 					ss << cache[0];
@@ -553,6 +554,7 @@ void Gloomhaven::actionphrase() {
 							HandleAction(actionline[actioncount], cd1->find(actionline[actioncount]._name).getskill(actionline[actioncount]._card1)[0]);
 						}
 					}
+					break;
 				}
 
 			}
@@ -574,7 +576,7 @@ void Gloomhaven::HandleAction(Object& tar, vector<Action>& action) {
 		switch (action[i].gettype()) {
 		case 0:
 			getline(cin, cache);
-			if (cache.size() > action[i].getparam1()) {
+			if (cache.length() > action[i].getparam1()) {
 				cout << "error move!!!" << endl;
 				i--;
 				continue;
@@ -633,11 +635,16 @@ void Gloomhaven::HandleAction(Object& tar, vector<Action>& action) {
 				continue;
 			}
 			else {
-
+				//////
 			}
 			break;
 		case 2:
+			tar.regen(action[i].getparam1());
+			cout << tar._mapid << " heal " << action[i].getparam1() << ", now hp is " << tar._life << endl;
+			break;
 		case 3:
+			tar._shield = action[i].getparam1();
+			cout << tar._mapid << " shield " << tar._shield << " this turn." << endl;
 			break;
 		}
 	}
@@ -732,10 +739,10 @@ bool Gloomhaven::isoccupied(Point2d& tar) {
 bool Gloomhaven::isvalidpos(Point2d& tar) {
 	if (tar.x() < 0 || tar.y() < 0 || tar.x() >= map1->_mapx || tar.y() >= map1->_mapy)
 		return false;
-	if (map1->_map[tar.y()][tar.x()] != 1 || map1->_map[tar.y()][tar.x()] != 3)
-		return false;
-	else
+	if (map1->_map[tar.y()][tar.x()] == '1' || map1->_map[tar.y()][tar.x()] == '3')
 		return true;
+	else
+		return false;
 }
 
 bool Gloomhaven::cardcheck(Object& tar, int card1, int card2) {

@@ -106,3 +106,8 @@ void Object::regen(int value) {
 	else
 		_life += value;
 }
+
+void Object::damage(int value) {
+	if (value - _shield > 0)
+		_life -= (value-_shield);
+}

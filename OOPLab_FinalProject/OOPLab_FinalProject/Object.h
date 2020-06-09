@@ -18,6 +18,7 @@ public:
 	void removecard(int, int);
 	void shuffle(int);
 	void regen(int);
+	void damage(int);
 
 	friend class Gloomhaven;
 private:
