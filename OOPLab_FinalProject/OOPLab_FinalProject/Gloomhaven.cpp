@@ -369,6 +369,9 @@ void Gloomhaven::actionphrase() {
 		objectiter = actionline.begin();
 		tmp = &charlist[i];
 		while (point < charlist.size()) {
+			if (actionline.empty()) {
+				actionline.push_back(*tmp);
+			}
 			if (tmp->_dex < actionline[point]._dex) {
 				objectiter = actionline.begin();
 				while (objectiter->_mapid != actionline[point]._mapid)
