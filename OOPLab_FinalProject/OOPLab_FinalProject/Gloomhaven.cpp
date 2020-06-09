@@ -482,11 +482,11 @@ void Gloomhaven::actionphrase() {
 					MonsterFindAndAttack(findbyId(actionline[actioncount]._mapid), actioniter->getparam1(), actioniter->getparam2());
 					break;
 				case 2:
-					actionline[actioncount].regen(actioniter->getparam1());
+					findbyId(actionline[actioncount]._mapid).regen(actioniter->getparam1());
 					cout << actionline[actioncount]._mapid << " heal " << actioniter->getparam1() << ", now hp is " << actionline[actioncount]._life << endl;
 					break;
 				case 3:
-					actionline[actioncount]._shield = actioniter->getparam1();
+					findbyId(actionline[actioncount]._mapid)._shield = actioniter->getparam1();
 					cout << actionline[actioncount]._mapid << " shield " << actioniter->getparam1() << " this turn" << endl;
 					break;
 				default:
@@ -528,8 +528,8 @@ void Gloomhaven::actionphrase() {
 				if (actionline[actioncount]._card1 == -1) {
 					ss << cache;
 					ss >> count;
-					actionline[actioncount].shuffle(count);
-					actionline[actioncount].regen(2);
+					findbyId(actionline[actioncount]._mapid).shuffle(count);
+					findbyId(actionline[actioncount]._mapid).regen(2);
 					cout << actionline[actioncount]._mapid << "heal 2, now hp is" << actionline[actioncount]._life << endl;
 					cout << "remove card: " << count << endl;
 					break;
@@ -588,6 +588,23 @@ void Gloomhaven::checkdoor() {
 	}
 
 	
+}
+
+void Gloomhaven::roundreset() {
+	for (int i = 0; i < monsterlist.size(); i++) {
+		if (monsterlist[i]._isactive && !monsterlist[i]._isdead) {
+			monsterlist[i]._hasmoved = false;
+			monsterlist[i]._shield = 0;
+		}
+	}
+	for (int i = 0; i < charlist.size(); i++) {
+		Point2d tmp = charlist[i]._pos;
+		if (charlist[i]._isactive && !charlist[i]._isdead) {
+			charlist[i]._hasmoved = false;
+			charlist[i]._shield = 0;
+		}
+	}
+
 }
 
 void Gloomhaven::HandleAction(Object& tar, vector<Action>& action) {
