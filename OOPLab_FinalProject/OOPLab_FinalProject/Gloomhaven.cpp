@@ -315,7 +315,7 @@ void Gloomhaven::preparephrase() {
 	while (miter != monstertype.end()) {
 		iter = monsterlist.begin();
 		while (iter != monsterlist.end()) {
-			if (iter->_name == *miter && iter->_isactive) {
+			if (iter->_name == *miter && iter->_isactive && !iter->_isdead) {
 				break;
 			}
 			iter++;
@@ -362,6 +362,9 @@ void Gloomhaven::actionphrase() {
 	vector<Object>::iterator objectiter;
 	Object* tmp;
 	for (unsigned i = 0; i < charlist.size(); i++) {
+		if (charlist[i]._isdead || !charlist[i]._isactive) {
+			continue;
+		}
 		objectiter = actionline.begin();
 		tmp = &charlist[i];
 		while (objectiter != actionline.end()) {
@@ -392,7 +395,7 @@ void Gloomhaven::actionphrase() {
 		unsigned point = 0;
 		tmp = new Object();
 		*tmp = monsterlist[i];
-		if (!tmp->_isactive)
+		if (!tmp->_isactive || tmp->_isdead)
 			continue;
 		while (point<monsterlist.size()) {
 			if (tmp->_dex < actionline[point]._dex) {
