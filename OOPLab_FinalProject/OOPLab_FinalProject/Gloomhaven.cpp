@@ -545,7 +545,7 @@ void Gloomhaven::actionphrase() {
 					ss >> count;
 					findbyId(actionline[actioncount]._mapid).shuffle(count);
 					findbyId(actionline[actioncount]._mapid).regen(2);
-					cout << actionline[actioncount]._mapid << "heal 2, now hp is" << actionline[actioncount]._life << endl;
+					cout << actionline[actioncount]._mapid << " heal 2, now hp is " << actionline[actioncount]._life << endl;
 					cout << "remove card: " << count << endl;
 					break;
 				}
@@ -899,7 +899,7 @@ void Gloomhaven::MonsterFindAndAttack(Object &mon,int atk,int range)
 	if (dmg < 0)
 		dmg = 0;
 	pairiter->first._life = pairiter->first._life - dmg;
-	cout << mon._mapid << " attack " << pairiter->first._mapid << " " << dmg << " damage,"
+	cout << mon._mapid << " attack " << pairiter->first._mapid << " " << dmg << " damage, "
 		<< pairiter->first._mapid << " shield " << pairiter->first._shield << ", "
 		<< pairiter->first._mapid << " remain " << pairiter->first._life << " hp" << endl;
 	if (DEBUG_MODE == 0)
