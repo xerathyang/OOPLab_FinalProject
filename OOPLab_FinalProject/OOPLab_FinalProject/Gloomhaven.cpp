@@ -506,6 +506,9 @@ void Gloomhaven::actionphrase() {
 		}
 		//character
 		else {
+			if (actionline[actioncount]._isdead) {
+				continue;
+			}
 			cout << actionline[actioncount]._mapid << "'s turn: card " << actionline[actioncount]._card1;
 			if (actionline[actioncount]._card1 != -1) {
 				cout << " " << actionline[actioncount]._card2 << endl;
