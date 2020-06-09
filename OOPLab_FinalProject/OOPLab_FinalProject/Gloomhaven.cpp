@@ -368,9 +368,9 @@ void Gloomhaven::actionphrase() {
 		}
 		objectiter = actionline.begin();
 		tmp = &charlist[i];
-		while (point < charlist.size()) {
+		while (point < actionline.size()) {
 			if (actionline.empty()) {
-				actionline.push_back(*tmp);
+				break;
 			}
 			if (tmp->_dex < actionline[point]._dex) {
 				objectiter = actionline.begin();
@@ -382,11 +382,23 @@ void Gloomhaven::actionphrase() {
 				break;
 			}
 			else if (tmp->_dex == actionline[point]._dex) {
-				if (cd1->find(tmp->_name).getdex(tmp->_card2) < cd1->find(objectiter->_name).getdex(objectiter->_card2)) {
+				if (cd1->find(tmp->_name).getdex(tmp->_card2) < cd1->find(actionline[point]._name).getdex(actionline[point]._card2)) {
+					objectiter = actionline.begin();
+					while (objectiter->_mapid != actionline[point]._mapid)
+					{
+						objectiter++;
+					}
+
 					actionline.insert(objectiter, *tmp);
 					break;
 				}
-				else if (cd1->find(tmp->_name).getdex(tmp->_card2) == cd1->find(objectiter->_name).getdex(objectiter->_card2)) {
+				else if (cd1->find(tmp->_name).getdex(tmp->_card2) == cd1->find(actionline[point]._name).getdex(actionline[point]._card2)) {
+					objectiter = actionline.begin();
+					while (objectiter->_mapid != actionline[point]._mapid)
+					{
+						objectiter++;
+					}
+
 					if (tmp->_mapid < objectiter->_mapid) {
 						actionline.insert(objectiter, *tmp);
 						break;
