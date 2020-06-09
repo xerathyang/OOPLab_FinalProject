@@ -601,6 +601,12 @@ void Gloomhaven::checkdoor() {
 		if (charlist[i]._isactive && map1->getMap()[tmp.y()][tmp.x()] == '3' && visiblearea[tmp.y()][tmp.x()] == '+') {
 			map1->SetSymbol(tmp, '1');
 			visiblearea = map1->generateVisiblefilter();
+			for (int j = 0; j < monsterlist.size(); j++) {
+				if (!monsterlist[j]._isactive && !monsterlist[j]._isdead
+					&& visiblearea[monsterlist[j]._pos.y()][monsterlist[j]._pos.y()] == '+') {
+					monsterlist[j]._isactive = true;
+				}
+			}
 			break;
 		}
 	}
