@@ -9,12 +9,15 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
+    bool gamestat = true;
     Gloomhaven driver;
     driver.setFilePath(argv[1], argv[2]);
     driver.init();
-    
-    driver.preparephrase();
-    driver.actionphrase();
+    while (gamestat) {
+        driver.preparephrase();
+        driver.actionphrase();
+
+    }
     //string input;
     //cin >> input;
     //if (input == "play") {

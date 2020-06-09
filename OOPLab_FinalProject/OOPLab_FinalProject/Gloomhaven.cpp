@@ -567,6 +567,10 @@ void Gloomhaven::actionphrase() {
 
 }
 
+bool Gloomhaven::checkdoor() {
+
+}
+
 void Gloomhaven::HandleAction(Object& tar, vector<Action>& action) {
 	string cache;
 	//int count;
@@ -659,6 +663,7 @@ void Gloomhaven::HandleAction(Object& tar, vector<Action>& action) {
 				}
 				if (findbyId(cache[0])._life <= 0) {
 					findbyId(cache[0])._isdead = true;
+					printMap(0);
 					cout << findbyId(cache[0])._mapid << " is killed!!" << endl;
 				}
 			}
@@ -836,7 +841,7 @@ void Gloomhaven::MonsterFindAndAttack(Object &mon,int atk,int range)
 	sort(tempCharlist.begin(), tempCharlist.end(), CompareForMFA);
 	vector<pair<Object&, int>>::iterator pairiter = tempCharlist.begin();
 
-	cout << mon._mapid << " lock " << pairiter->first._mapid << "in distance " << pairiter->second << endl;
+	cout << mon._mapid << " lock " << pairiter->first._mapid << " in distance " << pairiter->second << endl;
 	if (DEBUG_MODE == 0)
 		getchar();
 	int dmg = mon._atk + atk - pairiter->first._shield;

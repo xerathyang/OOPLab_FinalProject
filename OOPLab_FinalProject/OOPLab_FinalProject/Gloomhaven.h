@@ -24,6 +24,8 @@ public:
 	void init();
 	void preparephrase();
 	void actionphrase();
+
+	bool checkdoor();
 	void printMap(int);
 	void printMap(int, Point2d&);
 	bool isoccupied(Point2d&);
