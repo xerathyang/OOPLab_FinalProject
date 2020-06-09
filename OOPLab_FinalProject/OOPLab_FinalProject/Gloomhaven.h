@@ -31,6 +31,7 @@ public:
 	void printMap(int);
 	void printMap(int, Point2d&);
 	bool isoccupied(Point2d&);
+	bool isfriend(Point2d&, bool);
 	bool isvalidpos(Point2d&);
 	bool cardcheck(Object&, int, int);
 	Object& findbyId(char);

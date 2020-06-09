@@ -447,7 +447,7 @@ void Gloomhaven::actionphrase() {
 
 	//cout << "!" << endl;
 	string moveway;
-	Point2d aftermove;
+	Point2d aftermove, movecache;
 	int count;
 	string cache;
 	stringstream ss;
@@ -466,7 +466,9 @@ void Gloomhaven::actionphrase() {
 				case 0:
 					moveway = actioniter->getmoveway();
 					aftermove = actionline[actioncount]._pos;
+					movecache = aftermove;
 					for (int i = 0; i < moveway.length(); i++) {
+						movecache = aftermove;
 						switch (moveway[i]) {
 						case 'w':
 							aftermove = aftermove - Point2d(0, 1);
@@ -483,10 +485,14 @@ void Gloomhaven::actionphrase() {
 						default:
 							break;
 						}
+						if (isoccupied(aftermove) || !isvalidpos(aftermove)) {
+							break;
+						}
 					}
-					if (!isoccupied(aftermove)&&isvalidpos(aftermove)) {
-						findbyId(actionline[actioncount]._mapid)._pos = aftermove;
-					}
+					//if (!isoccupied(aftermove)&&isvalidpos(aftermove)) {
+					//	findbyId(actionline[actioncount]._mapid)._pos = aftermove;
+					//}
+					findbyId(actionline[actioncount]._mapid)._pos = movecache;
 					printMap(0);
 					break;
 				case 1:
@@ -603,7 +609,7 @@ void Gloomhaven::checkdoor() {
 			visiblearea = map1->generateVisiblefilter();
 			for (int j = 0; j < monsterlist.size(); j++) {
 				if (!monsterlist[j]._isactive && !monsterlist[j]._isdead
-					&& visiblearea[monsterlist[j]._pos.y()][monsterlist[j]._pos.y()] == '+') {
+					&& visiblearea[monsterlist[j]._pos.y()][monsterlist[j]._pos.x()] == '+') {
 					monsterlist[j]._isactive = true;
 				}
 			}
@@ -672,6 +678,10 @@ void Gloomhaven::HandleAction(Object& tar, vector<Action>& action) {
 				default:
 					break;
 				}
+				if (!isfriend(aftermove, false) || !isvalidpos(aftermove)) {
+					break;
+				}
+					
 			}
 			if (!isoccupied(aftermove) && isvalidpos(aftermove)) {
 				findbyId(tar._mapid)._pos = aftermove;
@@ -824,6 +834,23 @@ bool Gloomhaven::isoccupied(Point2d& tar) {
 			return true;
 	}
 	return false;
+}
+
+bool Gloomhaven::isfriend(Point2d& tar, bool ismonster) {
+	if (ismonster) {
+		for (unsigned i = 0; i < monsterlist.size(); i++) {
+			if (!monsterlist[i]._isdead && monsterlist[i]._pos == tar)
+				return true;
+		}
+		return false;
+	}
+	else {
+		for (unsigned i = 0; i < charlist.size(); i++) {
+			if (!charlist[i]._isdead && charlist[i]._pos == tar)
+				return true;
+		}
+		return false;
+	}
 }
 
 bool Gloomhaven::isvalidpos(Point2d& tar) {
