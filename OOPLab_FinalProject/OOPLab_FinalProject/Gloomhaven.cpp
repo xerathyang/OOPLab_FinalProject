@@ -571,8 +571,22 @@ void Gloomhaven::actionphrase() {
 
 }
 
-bool Gloomhaven::checkdoor() {
-	return true;
+void Gloomhaven::checkdoor() {
+	for (int i = 0; i < monsterlist.size(); i++) {
+		if (monsterlist[i]._isactive && !monsterlist[i]._isdead) {
+			return;
+		}
+	}
+	for (int i = 0; i < charlist.size(); i++) {
+		Point2d tmp = charlist[i]._pos;
+		if (charlist[i]._isactive && map1->getMap()[tmp.y()][tmp.x()] == '3' && visiblearea[tmp.y()][tmp.x()] == '+') {
+			map1->SetSymbol(tmp, '1');
+			visiblearea = map1->generateVisiblefilter();
+			break;
+		}
+	}
+
+	
 }
 
 void Gloomhaven::HandleAction(Object& tar, vector<Action>& action) {

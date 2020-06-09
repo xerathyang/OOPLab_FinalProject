@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
     while (gamestat) {
         driver.preparephrase();
         driver.actionphrase();
-
+        driver.checkdoor();
     }
     //string input;
     //cin >> input;
