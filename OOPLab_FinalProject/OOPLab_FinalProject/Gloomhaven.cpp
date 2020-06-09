@@ -572,7 +572,7 @@ void Gloomhaven::actionphrase() {
 }
 
 bool Gloomhaven::checkdoor() {
-
+	return true;
 }
 
 void Gloomhaven::HandleAction(Object& tar, vector<Action>& action) {
