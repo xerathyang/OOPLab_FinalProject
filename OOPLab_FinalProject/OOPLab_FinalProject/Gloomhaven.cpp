@@ -308,6 +308,8 @@ void Gloomhaven::preparephrase() {
 	}
 
 	//monster prepare
+
+	//bug
 	cache1 = 0;
 	cache2 = -1;
 	set<string>::iterator miter = monstertype.begin();
@@ -501,9 +503,13 @@ void Gloomhaven::actionphrase() {
 		//character
 		else {
 			cout << actionline[actioncount]._mapid << "'s turn: card " << actionline[actioncount]._card1;
-
 			if (actionline[actioncount]._card1 != -1) {
 				cout << " " << actionline[actioncount]._card2 << endl;
+				findbyId(actionline[actioncount]._mapid)._cardindex.erase(actionline[actioncount]._card1);
+				findbyId(actionline[actioncount]._mapid)._cardindex.erase(actionline[actioncount]._card2);
+				findbyId(actionline[actioncount]._mapid)._discardindex.insert(actionline[actioncount]._card1);
+				findbyId(actionline[actioncount]._mapid)._discardindex.insert(actionline[actioncount]._card2);
+
 			}
 			else
 				cout << endl;

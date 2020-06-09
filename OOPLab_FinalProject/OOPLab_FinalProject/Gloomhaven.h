@@ -25,6 +25,7 @@ public:
 	void preparephrase();
 	void actionphrase();
 
+	void isend();
 	void checkdoor();
 	void roundreset();
 	void printMap(int);
