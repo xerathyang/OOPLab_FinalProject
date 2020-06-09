@@ -585,7 +585,11 @@ void Gloomhaven::actionphrase() {
 				if (actionline[actioncount]._card1 == -1) {
 					ss << cache;
 					ss >> count;
-					findbyId(actionline[actioncount]._mapid).shuffle(count);
+					if (!findbyId(actionline[actioncount]._mapid).shuffle(count)) {
+						cout << "You don't have this card in discard pite now." << endl;
+						continue;
+					}
+					
 					findbyId(actionline[actioncount]._mapid).regen(2);
 					cout << actionline[actioncount]._mapid << " heal 2, now hp is " << actionline[actioncount]._life << endl;
 					cout << "remove card: " << count << endl;

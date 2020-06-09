@@ -16,7 +16,7 @@ public:
 	int getdex() { return _dex; };
 	string getname() { return _name; };
 	void removecard(int, int);
-	void shuffle(int);
+	bool shuffle(int);
 	void regen(int);
 	void damage(int);
 

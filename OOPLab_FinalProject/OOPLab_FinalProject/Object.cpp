@@ -83,8 +83,13 @@ void Object::removecard(int card1, int card2) {
 
 }
 
-void Object::shuffle(int removecard) {
+bool Object::shuffle(int removecard) {
 	set<int>::iterator ster = _discardindex.begin();
+	auto search = _discardindex.find(removecard);
+	if (search == _discardindex.end()) {
+		return false;
+	}
+	
 	while (ster != _discardindex.end()) {
 		if (*ster == removecard) {
 			_discardindex.erase(ster);
@@ -98,6 +103,7 @@ void Object::shuffle(int removecard) {
 		ster++;
 	}
 	_discardindex.clear();
+	return true;
 }
 
 void Object::regen(int value) {
