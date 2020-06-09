@@ -588,7 +588,7 @@ void Gloomhaven::HandleAction(Object& tar, vector<Action>& action) {
 
 			aftermove = tar._pos;
 			for (int step = 0; step < cache.size(); step++) {
-				switch (cache[i]) {
+				switch (cache[step]) {
 				case 'e':
 					break;
 				case 'w':
