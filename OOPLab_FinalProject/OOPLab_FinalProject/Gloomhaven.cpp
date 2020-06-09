@@ -759,7 +759,6 @@ void Gloomhaven::HandleAction(Object& tar, vector<Action>& action) {
 			if (!isoccupied(aftermove) && isvalidpos(aftermove)) {
 				findbyId(tar._mapid)._pos = aftermove;
 				printMap(0);
-				cout << "move!!!" << endl;
 			}
 			else {
 				cout << "error move!!!" << endl;
@@ -988,6 +987,9 @@ void Gloomhaven::MonsterFindAndAttack(Object &mon,int atk,int range)
 	vector<pair<Object&, int>> tempCharlist;
 	for (unsigned MFA = 0; MFA < charlist.size(); MFA++)
 	{
+		if (charlist[MFA]._isdead) {
+			continue;
+		}
 		int X = charlist[MFA]._pos.x() - mon._pos.x();
 		int Y = charlist[MFA]._pos.y() - mon._pos.y();
 		if (abs(X) + abs(Y) <= (mon._range + range) && !FindBarrier(mon._pos, charlist[MFA]._pos))

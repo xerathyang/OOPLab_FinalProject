@@ -9,15 +9,26 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
+    string input;
     bool gamestat = true;
     Gloomhaven driver;
     driver.setFilePath(argv[1], argv[2]);
-    driver.init();
-    while (!driver.isend()) {
-        driver.preparephrase();
-        driver.actionphrase();
-        driver.checkdoor();
-        driver.roundreset();
+    cout << "Enter \"play\" to start." << endl;
+    while (getline(cin, input)) {
+        if (input == "play") {
+            driver.init();
+            while (!driver.isend()) {
+                driver.preparephrase();
+                driver.actionphrase();
+                driver.checkdoor();
+                driver.roundreset();
+            }
+
+        }
+        else if (input == "exit") {
+            break;
+        }
+        cout << "Enter \"play\" to restart, or \"exit\" to end the game." << endl;
     }
     //string input;
     //cin >> input;
