@@ -364,7 +364,9 @@ void Gloomhaven::preparephrase() {
 		while (iter != monsterlist.end()) {
 			if (iter->_name == *miter) {
 				iter->_card1 = cache1;
-				iter->_cardindex.erase(cache1);
+				iter->_dex = md1->find(iter->_name).getdex(iter->_card1);
+				iter->_cardindex.erase(iter->_card1);
+				iter->_discardindex.insert(iter->_card1);
 			}
 			iter++;
 		}
@@ -433,8 +435,19 @@ void Gloomhaven::actionphrase() {
 	}
 	for (unsigned i = 0; i < monsterlist.size(); i++) {
 		unsigned point = 0;
+		bool flag = false;
 		tmp = new Object();
 		*tmp = monsterlist[i];
+		for (unsigned c = 0; c < actionline.size(); c++) {
+			if (monsterlist[i]._name == actionline[c]._name) {
+				flag = true;
+				break;
+
+			}
+		}
+		if (flag) {
+			continue;
+		}
 		if (!tmp->_isactive || tmp->_isdead)
 			continue;
 		while (point<actionline.size()) {
@@ -496,65 +509,71 @@ void Gloomhaven::actionphrase() {
 	for (unsigned actioncount = 0; actioncount < actionline.size(); actioncount++) {
 		//monster
 		if (actionline[actioncount]._ismonster) {
-			if (findbyId(actionline[actioncount]._mapid)._isdead)
-				continue;
-			actiontmp = md1->find(actionline[actioncount]._name).getskill(actionline[actioncount]._card1);
-			actioniter = actiontmp.begin();
-			if (md1->find(actionline[actioncount]._name).needshuffle(actionline[actioncount]._card1)) {
-				findbyId(actionline[actioncount]._mapid).shuffle(-1);
-			}
-			while (actioniter != actiontmp.end()) {
-				switch (actioniter->gettype()) {
-				case 0:
-					moveway = actioniter->getmoveway();
-					aftermove = actionline[actioncount]._pos;
-					movecache = aftermove;
-					for (int i = 0; i < moveway.length(); i++) {
-						movecache = aftermove;
-						switch (moveway[i]) {
-						case 'w':
-							aftermove = aftermove - Point2d(0, 1);
+			for (unsigned c = 0; c < monsterlist.size(); c++) {
+				if (monsterlist[c]._name == actionline[actioncount]._name) {
+					if (monsterlist[c]._isdead)
+						continue;
+					actiontmp = md1->find(actionline[actioncount]._name).getskill(actionline[actioncount]._card1);
+					actioniter = actiontmp.begin();
+					if (md1->find(actionline[actioncount]._name).needshuffle(actionline[actioncount]._card1)) {
+						monsterlist[c].shuffle(-1);
+					}
+					while (actioniter != actiontmp.end()) {
+						switch (actioniter->gettype()) {
+						case 0:
+							moveway = actioniter->getmoveway();
+							aftermove = monsterlist[c]._pos;
+							movecache = aftermove;
+							for (int i = 0; i < moveway.length(); i++) {
+								movecache = aftermove;
+								switch (moveway[i]) {
+								case 'w':
+									aftermove = aftermove - Point2d(0, 1);
+									break;
+								case 'a':
+									aftermove = aftermove - Point2d(1, 0);
+									break;
+								case 's':
+									aftermove = aftermove + Point2d(0, 1);
+									break;
+								case 'd':
+									aftermove = aftermove + Point2d(1, 0);
+									break;
+								default:
+									break;
+								}
+								if (isoccupied(aftermove) || !isvalidpos(aftermove)) {
+									break;
+								}
+							}
+							//if (!isoccupied(aftermove)&&isvalidpos(aftermove)) {
+							//	findbyId(actionline[actioncount]._mapid)._pos = aftermove;
+							//}
+							monsterlist[c]._pos = movecache;
+							printMap(0);
 							break;
-						case 'a':
-							aftermove = aftermove - Point2d(1, 0);
+						case 1:
+							MonsterFindAndAttack(monsterlist[c], actioniter->getparam1(), actioniter->getparam2());
 							break;
-						case 's':
-							aftermove = aftermove + Point2d(0, 1);
+						case 2:
+							monsterlist[c].regen(actioniter->getparam1());
+							cout << monsterlist[c]._mapid << " heal " << actioniter->getparam1() << ", now hp is " << monsterlist[c]._life << endl;
 							break;
-						case 'd':
-							aftermove = aftermove + Point2d(1, 0);
+						case 3:
+							monsterlist[c]._shield = actioniter->getparam1();
+							cout << monsterlist[c]._mapid << " shield " << actioniter->getparam1() << " this turn" << endl;
 							break;
 						default:
 							break;
 						}
-						if (isoccupied(aftermove) || !isvalidpos(aftermove)) {
-							break;
-						}
-					}
-					//if (!isoccupied(aftermove)&&isvalidpos(aftermove)) {
-					//	findbyId(actionline[actioncount]._mapid)._pos = aftermove;
-					//}
-					findbyId(actionline[actioncount]._mapid)._pos = movecache;
-					printMap(0);
-					break;
-				case 1:
-					MonsterFindAndAttack(findbyId(actionline[actioncount]._mapid), actioniter->getparam1(), actioniter->getparam2());
-					break;
-				case 2:
-					findbyId(actionline[actioncount]._mapid).regen(actioniter->getparam1());
-					cout << actionline[actioncount]._mapid << " heal " << actioniter->getparam1() << ", now hp is " << findbyId(actionline[actioncount]._mapid)._life << endl;
-					break;
-				case 3:
-					findbyId(actionline[actioncount]._mapid)._shield = actioniter->getparam1();
-					cout << actionline[actioncount]._mapid << " shield " << actioniter->getparam1() << " this turn" << endl;
-					break;
-				default:
-					break;
-				}
-				actioniter++;
-				if (DEBUG_MODE == 0)
-					getchar();
+						actioniter++;
+						if (DEBUG_MODE == 0)
+							getchar();
 				
+					}
+
+
+				}
 			}
 		}
 		//character
