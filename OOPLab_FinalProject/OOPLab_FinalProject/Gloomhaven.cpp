@@ -437,7 +437,7 @@ void Gloomhaven::actionphrase() {
 		*tmp = monsterlist[i];
 		if (!tmp->_isactive || tmp->_isdead)
 			continue;
-		while (point<monsterlist.size()) {
+		while (point<actionline.size()) {
 			if (tmp->_dex < actionline[point]._dex) {
 				objectiter = actionline.begin();
 				while (objectiter->_mapid!=actionline[point]._mapid)
